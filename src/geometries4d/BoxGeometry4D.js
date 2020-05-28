@@ -6,7 +6,7 @@
 import { Geometry } from '../core/Geometry.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vector4 } from '../math/Vector4_.js';
 
 // BoxGeometry
 
@@ -89,8 +89,8 @@ class BoxBufferGeometry4D extends BufferGeometry {
 		// build geometry
 
 		this.setIndex( indices );
-		this.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
-		this.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
+		this.setAttribute( 'position', new Float32BufferAttribute( vertices, 4 ) );
+		this.setAttribute( 'normal', new Float32BufferAttribute( normals, 4 ) );
 		this.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
 
 		function buildPlane( u, v, w, udir, vdir, width, height, depth, gridX, gridY, materialIndex ) {
@@ -110,7 +110,7 @@ class BoxBufferGeometry4D extends BufferGeometry {
 
 			var ix, iy;
 
-			var vector = new Vector3();
+			var vector = new Vector4();
 
 			// generate vertices, normals and uvs
 
@@ -127,20 +127,22 @@ class BoxBufferGeometry4D extends BufferGeometry {
 					vector[ u ] = x * udir;
 					vector[ v ] = y * vdir;
 					vector[ w ] = depthHalf;
+					vector[ 'w' ] = 0;
 
 					// now apply vector to vertex buffer
 
-					vertices.push( vector.x, vector.y, vector.z );
+					vertices.push( vector.x, vector.y, vector.z, vector.w );
 
 					// set values to correct vector component
 
 					vector[ u ] = 0;
 					vector[ v ] = 0;
 					vector[ w ] = depth > 0 ? 1 : - 1;
+					vector[ w ] = 0;
 
 					// now apply vector to normal buffer
 
-					normals.push( vector.x, vector.y, vector.z );
+					normals.push( vector.x, vector.y, vector.z, vector.w );
 
 					// uvs
 

@@ -452,7 +452,7 @@ Object.assign( Matrix5.prototype, {
 	},
 
 	determinant: function () {
-		console.error( 'THREE.Matrix5: .determinant() is not done.' );
+		console.error( 'THREE.Matrix5: .determinant() is super inefficient.' );
 
 		var te = this.elements;
 
@@ -466,39 +466,11 @@ Object.assign( Matrix5.prototype, {
 		//( based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm )
 
 		return (
-			n41 * (
-				+ n14 * n23 * n32
-				 - n13 * n24 * n32
-				 - n14 * n22 * n33
-				 + n12 * n24 * n33
-				 + n13 * n22 * n34
-				 - n12 * n23 * n34
-			) +
-			n42 * (
-				+ n11 * n23 * n34
-				 - n11 * n24 * n33
-				 + n14 * n21 * n33
-				 - n13 * n21 * n34
-				 + n13 * n24 * n31
-				 - n14 * n23 * n31
-			) +
-			n43 * (
-				+ n11 * n24 * n32
-				 - n11 * n22 * n34
-				 - n14 * n21 * n32
-				 + n12 * n21 * n34
-				 + n14 * n22 * n31
-				 - n12 * n24 * n31
-			) +
-			n44 * (
-				- n13 * n22 * n31
-				 - n11 * n23 * n32
-				 + n11 * n22 * n33
-				 + n13 * n21 * n32
-				 - n12 * n21 * n33
-				 + n12 * n23 * n31
-			)
-
+			  n51 * new Matrix4().set(n12, n22, n32, n42, n13, n23, n33, n43, n14, n24, n34, n44, n15, n25, n35, n45).determinant()
+			- n52 * new Matrix4().set(n11, n21, n31, n41, n13, n23, n33, n43, n14, n24, n34, n44, n15, n25, n35, n45).determinant()
+			+ n53 * new Matrix4().set(n11, n21, n31, n41, n12, n22, n32, n42, n14, n24, n34, n44, n15, n25, n35, n45).determinant()
+			- n54 * new Matrix4().set(n11, n21, n31, n41, n12, n22, n32, n42, n13, n23, n33, n43, n15, n25, n35, n45).determinant()
+			+ n55 * new Matrix4().set(n11, n21, n31, n41, n12, n22, n32, n42, n13, n23, n33, n43, n14, n24, n34, n44).determinant()
 		);
 
 	},
@@ -546,27 +518,23 @@ Object.assign( Matrix5.prototype, {
 	},
 
 	getInverse: function ( m, throwOnDegenerate ) {
-		console.error( 'THREE.Matrix5: .getInverse() is not done.' );
+		console.error( 'THREE.Matrix5: .getInverse() is outrageously inefficient.' );
 
 		// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
 		var te = this.elements,
 			me = m.elements,
 
-			n11 = me[ 0 ], n21 = me[ 1 ], n31 = me[ 2 ], n41 = me[ 3 ],
-			n12 = me[ 4 ], n22 = me[ 5 ], n32 = me[ 6 ], n42 = me[ 7 ],
-			n13 = me[ 8 ], n23 = me[ 9 ], n33 = me[ 10 ], n43 = me[ 11 ],
-			n14 = me[ 12 ], n24 = me[ 13 ], n34 = me[ 14 ], n44 = me[ 15 ],
+			n11 = me[ 0 ],  n21 = me[ 1 ],  n31 = me[ 2 ],  n41 = me[ 3 ],  n51 = me[ 4 ],
+			n12 = me[ 5 ],  n22 = me[ 6 ],  n32 = me[ 7 ],  n42 = me[ 8 ],  n52 = me[ 9 ],
+			n13 = me[ 10 ], n23 = me[ 11 ], n33 = me[ 12 ], n43 = me[ 13 ], n53 = me[ 14 ],
+			n14 = me[ 15 ], n24 = me[ 16 ], n34 = me[ 17 ], n44 = me[ 18 ], n54 = me[ 19 ],
+			n15 = me[ 20 ], n25 = me[ 21 ], n35 = me[ 22 ], n45 = me[ 23 ], n55 = me[ 24 ];
 
-			t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44,
-			t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44,
-			t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44,
-			t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
-
-		var det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
+		var det = this.determinant();
 
 		if ( det === 0 ) {
 
-			var msg = "THREE.Matrix4: .getInverse() can't invert matrix, determinant is 0";
+			var msg = "THREE.Matrix5: .getInverse() can't invert matrix, determinant is 0";
 
 			if ( throwOnDegenerate === true ) {
 
@@ -584,25 +552,54 @@ Object.assign( Matrix5.prototype, {
 
 		var detInv = 1 / det;
 
-		te[ 0 ] = t11 * detInv;
-		te[ 1 ] = ( n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44 ) * detInv;
-		te[ 2 ] = ( n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44 ) * detInv;
-		te[ 3 ] = ( n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43 ) * detInv;
 
-		te[ 4 ] = t12 * detInv;
-		te[ 5 ] = ( n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44 ) * detInv;
-		te[ 6 ] = ( n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44 ) * detInv;
-		te[ 7 ] = ( n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43 ) * detInv;
+			// transpose
+		var	t11 = me[ 0 ],  t12 = me[ 1 ],  t13 = me[ 2 ],  t14 = me[ 3 ],  t15 = me[ 4 ],
+			t21 = me[ 5 ],  t22 = me[ 6 ],  t23 = me[ 7 ],  t24 = me[ 8 ],  t25 = me[ 9 ],
+			t31 = me[ 10 ], t32 = me[ 11 ], t33 = me[ 12 ], t34 = me[ 13 ], t35 = me[ 14 ],
+			t41 = me[ 15 ], t42 = me[ 16 ], t43 = me[ 17 ], t44 = me[ 18 ], t45 = me[ 19 ],
+			t51 = me[ 20 ], t52 = me[ 21 ], t53 = me[ 22 ], t54 = me[ 23 ], t55 = me[ 24 ],
 
-		te[ 8 ] = t13 * detInv;
-		te[ 9 ] = ( n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44 ) * detInv;
-		te[ 10 ] = ( n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44 ) * detInv;
-		te[ 11 ] = ( n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43 ) * detInv;
+			// transpose minors
+			tm11 = new Matrix4().set(t22, t32, t42, t52, t23, t33, t43, t53, t24, t34, t44, t54, t25, t35, t45, t55).determinant(),
+			tm12 = new Matrix4().set(t21, t31, t41, t51, t23, t33, t43, t53, t24, t34, t44, t54, t25, t35, t45, t55).determinant(),
+			tm13 = new Matrix4().set(t21, t31, t41, t51, t22, t32, t42, t52, t24, t34, t44, t54, t25, t35, t45, t55).determinant(),
+			tm14 = new Matrix4().set(t21, t31, t41, t51, t22, t32, t42, t52, t23, t33, t43, t53, t25, t35, t45, t55).determinant(),
+			tm15 = new Matrix4().set(t21, t31, t41, t51, t22, t32, t42, t52, t23, t33, t43, t53, t24, t34, t44, t54).determinant(),
 
-		te[ 12 ] = t14 * detInv;
-		te[ 13 ] = ( n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34 ) * detInv;
-		te[ 14 ] = ( n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34 ) * detInv;
-		te[ 15 ] = ( n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33 ) * detInv;
+			tm21 = new Matrix4().set(t12, t32, t42, t52, t13, t33, t43, t53, t14, t34, t44, t54, t15, t35, t45, t55).determinant(),
+			tm22 = new Matrix4().set(t11, t31, t41, t51, t13, t33, t43, t53, t14, t34, t44, t54, t15, t35, t45, t55).determinant(),
+			tm23 = new Matrix4().set(t11, t31, t41, t51, t12, t32, t42, t52, t14, t34, t44, t54, t15, t35, t45, t55).determinant(),
+			tm24 = new Matrix4().set(t11, t31, t41, t51, t12, t32, t42, t52, t13, t33, t43, t53, t15, t35, t45, t55).determinant(),
+			tm25 = new Matrix4().set(t11, t31, t41, t51, t12, t32, t42, t52, t13, t33, t43, t53, t14, t34, t44, t54).determinant(),
+
+			tm31 = new Matrix4().set(t12, t22, t42, t52, t13, t23, t43, t53, t14, t24, t44, t54, t15, t25, t45, t55).determinant(),
+			tm32 = new Matrix4().set(t11, t21, t41, t51, t13, t23, t43, t53, t14, t24, t44, t54, t15, t25, t45, t55).determinant(),
+			tm33 = new Matrix4().set(t11, t21, t41, t51, t12, t22, t42, t52, t14, t24, t44, t54, t15, t25, t45, t55).determinant(),
+			tm34 = new Matrix4().set(t11, t21, t41, t51, t12, t22, t42, t52, t13, t23, t43, t53, t15, t25, t45, t55).determinant(),
+			tm35 = new Matrix4().set(t11, t21, t41, t51, t12, t22, t42, t52, t13, t23, t43, t53, t14, t24, t44, t54).determinant(),
+
+			tm41 = new Matrix4().set(t12, t22, t32, t52, t13, t23, t33, t53, t14, t24, t34, t54, t15, t25, t35, t55).determinant(),
+			tm42 = new Matrix4().set(t11, t21, t31, t51, t13, t23, t33, t53, t14, t24, t34, t54, t15, t25, t35, t55).determinant(),
+			tm43 = new Matrix4().set(t11, t21, t31, t51, t12, t22, t32, t52, t14, t24, t34, t54, t15, t25, t35, t55).determinant(),
+			tm44 = new Matrix4().set(t11, t21, t31, t51, t12, t22, t32, t52, t13, t23, t33, t53, t15, t25, t35, t55).determinant(),
+			tm45 = new Matrix4().set(t11, t21, t31, t51, t12, t22, t32, t52, t13, t23, t33, t53, t14, t24, t34, t54).determinant(),
+
+			tm51 = new Matrix4().set(t12, t22, t32, t42, t13, t23, t33, t43, t14, t24, t34, t44, t15, t25, t35, t45).determinant(),
+			tm52 = new Matrix4().set(t11, t21, t31, t41, t13, t23, t33, t43, t14, t24, t34, t44, t15, t25, t35, t45).determinant(),
+			tm53 = new Matrix4().set(t11, t21, t31, t41, t12, t22, t32, t42, t14, t24, t34, t44, t15, t25, t35, t45).determinant(),
+			tm54 = new Matrix4().set(t11, t21, t31, t41, t12, t22, t32, t42, t13, t23, t33, t43, t15, t25, t35, t45).determinant(),
+			tm55 = new Matrix4().set(t11, t21, t31, t41, t12, t22, t32, t42, t13, t23, t33, t43, t14, t24, t34, t44).determinant();
+
+		var adjunct = new Matrix5().set( tm11, -tm12,  tm13, -tm14,  tm15,
+										-tm21,  tm22, -tm23,  tm24, -tm25,
+ 										 tm31, -tm32,  tm33, -tm34,  tm35,
+										-tm41,  tm42, -tm43,  tm44, -tm45,
+										 tm51, -tm52,  tm53, -tm54,  tm55,).scale(detInv)
+		
+		for (var i=0; i<adjunct.elements.length; i++) {
+			te[i] = adjunct.elements[i]
+		}
 
 		return this;
 

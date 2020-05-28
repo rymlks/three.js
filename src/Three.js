@@ -12,12 +12,14 @@ export { ShaderChunk } from './renderers/shaders/ShaderChunk.js';
 export { FogExp2 } from './scenes/FogExp2.js';
 export { Fog } from './scenes/Fog.js';
 export { Scene } from './scenes/Scene.js';
+export { Scene4D } from './scenes/Scene4D.js';
 export { Sprite } from './objects/Sprite.js';
 export { LOD } from './objects/LOD.js';
 export { SkinnedMesh } from './objects/SkinnedMesh.js';
 export { Skeleton } from './objects/Skeleton.js';
 export { Bone } from './objects/Bone.js';
 export { Mesh } from './objects/Mesh.js';
+export { Mesh4D } from './objects/Mesh4D.js';
 export { InstancedMesh } from './objects/InstancedMesh.js';
 export { LineSegments } from './objects/LineSegments.js';
 export { LineLoop } from './objects/LineLoop.js';
@@ -55,15 +57,19 @@ export { AudioLoader } from './loaders/AudioLoader.js';
 export { SpotLightShadow } from './lights/SpotLightShadow.js';
 export { SpotLight } from './lights/SpotLight.js';
 export { PointLight } from './lights/PointLight.js';
+export { PointLight4D } from './lights/PointLight4D.js';
 export { RectAreaLight } from './lights/RectAreaLight.js';
 export { HemisphereLight } from './lights/HemisphereLight.js';
 export { HemisphereLightProbe } from './lights/HemisphereLightProbe.js';
 export { DirectionalLightShadow } from './lights/DirectionalLightShadow.js';
 export { DirectionalLight } from './lights/DirectionalLight.js';
+export { DirectionalLight4D } from './lights/DirectionalLight4D.js';
 export { AmbientLight } from './lights/AmbientLight.js';
+export { AmbientLight4D } from './lights/AmbientLight4D.js';
 export { AmbientLightProbe } from './lights/AmbientLightProbe.js';
 export { LightShadow } from './lights/LightShadow.js';
 export { Light } from './lights/Light.js';
+export { Light4D } from './lights/Light4D.js';
 export { LightProbe } from './lights/LightProbe.js';
 export { StereoCamera } from './cameras/StereoCamera.js';
 export { PerspectiveCamera } from './cameras/PerspectiveCamera.js';
@@ -157,7 +163,10 @@ export { WebGLUtils } from './renderers/webgl/WebGLUtils.js';
 export * from './constants.js';
 export * from './Three.Legacy.js';
 
+/* 4D extras */
 export * from './geometries4d/Geometries4D.js';
+export { Camera4D } from './cameras4d/Camera4D.js';
+export { PerspectiveCamera4D } from './cameras4d/PerspectiveCamera4D.js';
 
 if ( typeof __THREE_DEVTOOLS__ !== 'undefined' ) {
 

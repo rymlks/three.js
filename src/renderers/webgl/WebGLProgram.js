@@ -487,28 +487,29 @@ function WebGLProgram( renderer, cacheKey, parameters ) {
 
 			parameters.logarithmicDepthBuffer ? '#define USE_LOGDEPTHBUF' : '',
 			( parameters.logarithmicDepthBuffer && parameters.rendererExtensionFragDepth ) ? '#define USE_LOGDEPTHBUF_EXT' : '',
-
-			'uniform mat4 modelMatrix;',
-			'uniform mat4 modelViewMatrix;',
-			'uniform mat4 projectionMatrix;',
-			'uniform mat4 viewMatrix;',
-			'uniform mat3 normalMatrix;',
-			'uniform vec3 cameraPosition;',
+			
+			'#include <math_4d>',
+			'uniform mat5 modelMatrix;',
+			'uniform mat5 modelViewMatrix;',
+			'uniform mat5 projectionMatrix;',
+			'uniform mat5 viewMatrix;',
+			'uniform mat4 normalMatrix;',
+			'uniform vec4 cameraPosition;',
 			'uniform bool isOrthographic;',
 
 			'#ifdef USE_INSTANCING',
 
-			' attribute mat4 instanceMatrix;',
+			' attribute mat5 instanceMatrix;',
 
 			'#endif',
 
-			'attribute vec3 position;',
-			'attribute vec3 normal;',
+			'attribute vec4 position;',
+			'attribute vec4 normal;',
 			'attribute vec2 uv;',
 
 			'#ifdef USE_TANGENT',
 
-			'	attribute vec4 tangent;',
+			'	attribute vec5 tangent;',
 
 			'#endif',
 
@@ -616,8 +617,9 @@ function WebGLProgram( renderer, cacheKey, parameters ) {
 
 			( ( parameters.extensionShaderTextureLOD || parameters.envMap ) && parameters.rendererExtensionShaderTextureLod ) ? '#define TEXTURE_LOD_EXT' : '',
 
-			'uniform mat4 viewMatrix;',
-			'uniform vec3 cameraPosition;',
+			'#include <math_4d>',
+			'uniform mat5 viewMatrix;',
+			'uniform vec4 cameraPosition;',
 			'uniform bool isOrthographic;',
 
 			( parameters.toneMapping !== NoToneMapping ) ? '#define TONE_MAPPING' : '',
@@ -694,7 +696,8 @@ function WebGLProgram( renderer, cacheKey, parameters ) {
 			'#define textureCubeLodEXT textureLod',
 			'#define texture2DGradEXT textureGrad',
 			'#define texture2DProjGradEXT textureProjGrad',
-			'#define textureCubeGradEXT textureGrad'
+			'#define textureCubeGradEXT textureGrad',
+			'#include <math_4d>'
 		].join( '\n' ) + '\n' + prefixFragment;
 
 		// Multiview
@@ -713,16 +716,16 @@ function WebGLProgram( renderer, cacheKey, parameters ) {
 
 			prefixVertex = prefixVertex.replace(
 				[
-					'uniform mat4 modelViewMatrix;',
-					'uniform mat4 projectionMatrix;',
-					'uniform mat4 viewMatrix;',
-					'uniform mat3 normalMatrix;'
+					'uniform mat5 modelViewMatrix;',
+					'uniform mat5 projectionMatrix;',
+					'uniform mat5 viewMatrix;',
+					'uniform mat4 normalMatrix;'
 				].join( '\n' ),
 				[
-					'uniform mat4 modelViewMatrices[' + numMultiviewViews + '];',
-					'uniform mat4 projectionMatrices[' + numMultiviewViews + '];',
-					'uniform mat4 viewMatrices[' + numMultiviewViews + '];',
-					'uniform mat3 normalMatrices[' + numMultiviewViews + '];',
+					'uniform mat5 modelViewMatrices[' + numMultiviewViews + '];',
+					'uniform mat5 projectionMatrices[' + numMultiviewViews + '];',
+					'uniform mat5 viewMatrices[' + numMultiviewViews + '];',
+					'uniform mat4 normalMatrices[' + numMultiviewViews + '];',
 
 					'#define modelViewMatrix modelViewMatrices[VIEW_ID]',
 					'#define projectionMatrix projectionMatrices[VIEW_ID]',
@@ -741,9 +744,9 @@ function WebGLProgram( renderer, cacheKey, parameters ) {
 			);
 
 			prefixFragment = prefixFragment.replace(
-				'uniform mat4 viewMatrix;',
+				'uniform mat5 viewMatrix;',
 				[
-					'uniform mat4 viewMatrices[' + numMultiviewViews + '];',
+					'uniform mat5 viewMatrices[' + numMultiviewViews + '];',
 					'#define viewMatrix viewMatrices[VIEW_ID]'
 				].join( '\n' )
 			);
@@ -752,8 +755,11 @@ function WebGLProgram( renderer, cacheKey, parameters ) {
 
 	}
 
-	var vertexGlsl = prefixVertex + vertexShader;
-	var fragmentGlsl = prefixFragment + fragmentShader;
+	prefixVertex = resolveIncludes( prefixVertex );
+	prefixFragment = resolveIncludes( prefixFragment );
+
+	var vertexGlsl =  prefixVertex + vertexShader;
+	var fragmentGlsl =  prefixFragment + fragmentShader;
 
 	// console.log( '*VERTEX*', vertexGlsl );
 	// console.log( '*FRAGMENT*', fragmentGlsl );

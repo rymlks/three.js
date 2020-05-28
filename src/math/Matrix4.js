@@ -114,6 +114,23 @@ Object.assign( Matrix4.prototype, {
 
 	},
 
+	setFromMatrix5: function ( m ) {
+
+		var me = m.elements;
+
+		this.set(
+
+			me[ 0 ], me[ 5 ], me[ 10 ], me[ 15 ],
+			me[ 1 ], me[ 6 ], me[ 11 ], me[ 16 ],
+			me[ 2 ], me[ 7 ], me[ 12 ], me[ 17 ],
+			me[ 3 ], me[ 8 ], me[ 13 ], me[ 18 ]
+
+		);
+
+		return this;
+
+	},
+
 	makeBasis: function ( xAxis, yAxis, zAxis ) {
 
 		this.set(
@@ -479,6 +496,12 @@ Object.assign( Matrix4.prototype, {
 		tmp = te[ 11 ]; te[ 11 ] = te[ 14 ]; te[ 14 ] = tmp;
 
 		return this;
+
+	},
+
+	getNormalMatrix: function ( matrix5 ) {
+
+		return this.setFromMatrix5( matrix5 ).getInverse( this ).transpose();
 
 	},
 

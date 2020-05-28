@@ -2,6 +2,7 @@ import { Quaternion } from '../math/Quaternion.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Vector4 } from '../math/Vector4_.js';
 import { Matrix4 } from '../math/Matrix4.js';
+import { Matrix5 } from '../math/Matrix5.js';
 import { EventDispatcher } from './EventDispatcher.js';
 import { Euler } from '../math/Euler.js';
 import { Layers } from './Layers.js';
@@ -10,19 +11,19 @@ import { MathUtils } from '../math/MathUtils.js';
 
 var _object4DId = 0;
 
-var _v1 = new Vector3();
+var _v1 = new Vector4();
 var _q1 = new Quaternion();
-var _m1 = new Matrix4();
-var _target = new Vector3();
+var _m1 = new Matrix5();
+var _target = new Vector4();
 
 var _position = new Vector4();
 var _scale = new Vector4();
 var _quaternion = new Quaternion();
 
-var _xAxis = new Vector3( 1, 0, 0, 0 );
-var _yAxis = new Vector3( 0, 1, 0, 0 );
-var _zAxis = new Vector3( 0, 0, 1, 0 );
-var _wAxis = new Vector3( 0, 0, 0, 1 );
+var _xAxis = new Vector4( 1, 0, 0, 0 );
+var _yAxis = new Vector4( 0, 1, 0, 0 );
+var _zAxis = new Vector4( 0, 0, 1, 0 );
+var _wAxis = new Vector4( 0, 0, 0, 1 );
 
 var _addedEvent = { type: 'added' };
 var _removedEvent = { type: 'removed' };
@@ -91,17 +92,17 @@ function Object4D() {
 			value: scale
 		},
 		modelViewMatrix: {
-			value: new Matrix4()
+			value: new Matrix5()
 		},
 		normalMatrix: {
-			value: new Matrix3()
+			value: new Matrix4()
 		}
 	} );
 
 	this.matrix = new Matrix4();
 	this.matrixWorld = new Matrix4();
 
-	this.matrixAutoUpdate = Object3D.DefaultMatrixAutoUpdate;
+	this.matrixAutoUpdate = Object4D.DefaultMatrixAutoUpdate;
 	this.matrixWorldNeedsUpdate = false;
 
 	this.layers = new Layers();
@@ -117,14 +118,14 @@ function Object4D() {
 
 }
 
-Object3D.DefaultUp = new Vector3( 0, 1, 0 );
-Object3D.DefaultMatrixAutoUpdate = true;
+Object4D.DefaultUp = new Vector4( 0, 1, 0, 0 );
+Object4D.DefaultMatrixAutoUpdate = true;
 
-Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
+Object4D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
 
-	constructor: Object3D,
+	constructor: Object4D,
 
-	isObject3D: true,
+	isObject4D: true,
 
 	onBeforeRender: function () {},
 	onAfterRender: function () {},
@@ -265,17 +266,17 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 	},
 
-	lookAt: function ( x, y, z ) {
+	lookAt: function ( x, y, z, w ) {
 
 		// This method does not support objects having non-uniformly-scaled parent(s)
 
-		if ( x.isVector3 ) {
+		if ( x.isVector4 ) {
 
 			_target.copy( x );
 
 		} else {
 
-			_target.set( x, y, z );
+			_target.set( x, y, z, w );
 
 		}
 
@@ -323,12 +324,12 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		if ( object === this ) {
 
-			console.error( "THREE.Object3D.add: object can't be added as a child of itself.", object );
+			console.error( "THREE.Object4D.add: object can't be added as a child of itself.", object );
 			return this;
 
 		}
 
-		if ( ( object && object.isObject3D ) ) {
+		if ( ( object && object.isObject4D ) ) {
 
 			if ( object.parent !== null ) {
 
@@ -343,7 +344,7 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		} else {
 
-			console.error( "THREE.Object3D.add: object not an instance of THREE.Object3D.", object );
+			console.error( "THREE.Object4D.add: object not an instance of THREE.Object3D.", object );
 
 		}
 
@@ -396,7 +397,7 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		}
 
-		object.applyMatrix4( _m1 );
+		object.applyMatrix5( _m1 );
 
 		object.updateWorldMatrix( false, false );
 
@@ -443,8 +444,8 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		if ( target === undefined ) {
 
-			console.warn( 'THREE.Object3D: .getWorldPosition() target is now required' );
-			target = new Vector3();
+			console.warn( 'THREE.Object4D: .getWorldPosition() target is now required' );
+			target = new Vector4();
 
 		}
 
@@ -455,10 +456,10 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 	},
 
 	getWorldQuaternion: function ( target ) {
-
+		console.warn( 'THREE.Object4D: .getWorldQuaternion() is not done' );
 		if ( target === undefined ) {
 
-			console.warn( 'THREE.Object3D: .getWorldQuaternion() target is now required' );
+			console.warn( 'THREE.Object4D: .getWorldQuaternion() target is now required' );
 			target = new Quaternion();
 
 		}
@@ -472,11 +473,11 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 	},
 
 	getWorldScale: function ( target ) {
-
+		console.warn( 'THREE.Object4D: .getWorldScale() is not done' );
 		if ( target === undefined ) {
 
-			console.warn( 'THREE.Object3D: .getWorldScale() target is now required' );
-			target = new Vector3();
+			console.warn( 'THREE.Object4D: .getWorldScale() target is now required' );
+			target = new Vector4();
 
 		}
 
@@ -489,11 +490,11 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 	},
 
 	getWorldDirection: function ( target ) {
-
+		console.warn( 'THREE.Object4D: .getWorldDirection() is not done' );
 		if ( target === undefined ) {
 
-			console.warn( 'THREE.Object3D: .getWorldDirection() target is now required' );
-			target = new Vector3();
+			console.warn( 'THREE.Object4D: .getWorldDirection() target is now required' );
+			target = new Vector4();
 
 		}
 
@@ -655,7 +656,7 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 			output.metadata = {
 				version: 4.5,
 				type: 'Object',
-				generator: 'Object3D.toJSON'
+				generator: 'Object4D.toJSON'
 			};
 
 		}
@@ -862,4 +863,4 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 } );
 
 
-export { Object3D };
+export { Object4D };
