@@ -177,7 +177,7 @@ function WebGLRenderer( parameters ) {
 
 		_projScreenMatrix = new Matrix5(),
 
-		_vector3 = new Vector3();
+		_vector4 = new Vector4();
 
 	function getTargetPixelRatio() {
 
@@ -1320,7 +1320,7 @@ function WebGLRenderer( parameters ) {
 
 					if ( sortObjects ) {
 
-						_vector3.setFromMatrixPosition( object.matrixWorld )
+						_vector4.setFromMatrixPosition( object.matrixWorld )
 							.applyMatrix4( _projScreenMatrix );
 
 					}
@@ -1330,7 +1330,7 @@ function WebGLRenderer( parameters ) {
 
 					if ( material.visible ) {
 
-						currentRenderList.push( object, geometry, material, groupOrder, _vector3.z, null );
+						currentRenderList.push( object, geometry, material, groupOrder, _vector4.w, null );
 
 					}
 
@@ -1340,12 +1340,12 @@ function WebGLRenderer( parameters ) {
 
 				if ( sortObjects ) {
 
-					_vector3.setFromMatrixPosition( object.matrixWorld )
+					_vector4.setFromMatrixPosition( object.matrixWorld )
 						.applyMatrix4( _projScreenMatrix );
 
 				}
 
-				currentRenderList.push( object, null, object.material, groupOrder, _vector3.z, null );
+				currentRenderList.push( object, null, object.material, groupOrder, _vector4.w, null );
 
 			} else if ( object.isMesh || object.isLine || object.isPoints ) {
 
@@ -1366,7 +1366,7 @@ function WebGLRenderer( parameters ) {
 
 					if ( sortObjects ) {
 
-						_vector3.setFromMatrixPosition( object.matrixWorld )
+						_vector4.setFromMatrixPosition( object.matrixWorld )
 							.applyMatrix4( _projScreenMatrix );
 
 					}
@@ -1385,7 +1385,7 @@ function WebGLRenderer( parameters ) {
 
 							if ( groupMaterial && groupMaterial.visible ) {
 
-								currentRenderList.push( object, geometry, groupMaterial, groupOrder, _vector3.z, group );
+								currentRenderList.push( object, geometry, groupMaterial, groupOrder, _vector4.w, group );
 
 							}
 
@@ -1393,7 +1393,7 @@ function WebGLRenderer( parameters ) {
 
 					} else if ( material.visible ) {
 
-						currentRenderList.push( object, geometry, material, groupOrder, _vector3.z, null );
+						currentRenderList.push( object, geometry, material, groupOrder, _vector4.w, null );
 
 					}
 
@@ -1772,7 +1772,7 @@ function WebGLRenderer( parameters ) {
 				if ( uCamPos !== undefined ) {
 
 					uCamPos.setValue( _gl,
-						_vector3.setFromMatrixPosition( camera.matrixWorld ) );
+						_vector4.setFromMatrixPosition( camera.matrixWorld ) );
 
 				}
 

@@ -27,6 +27,6 @@ vec4 tmpPosition = castv4(mvPosition);
 
 //gl_Position = projectionMatrix * tmpPosition;
 
-gl_Position = vec4(tmpPosition.x, tmpPosition.y, 0.0, 1.0);
+gl_Position = vec4(tmpPosition.x, tmpPosition.y, tmpPosition.z, 1.0);
 //gl_Position = vec4(tmpPosition.x, tmpPosition.y, -1.0, 1.0);
 `;

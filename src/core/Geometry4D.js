@@ -205,7 +205,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 		if ( uvs2 !== undefined ) this.faceVertexUvs[ 1 ] = [];
 
-		for ( var i = 0; i < positions.length; i += 3 ) {
+		for ( var i = 0; i < positions.length; i += 4 ) {
 
 			scope.vertices.push( new Vector4().fromArray( positions, i ) );
 
