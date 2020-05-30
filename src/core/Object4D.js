@@ -99,8 +99,8 @@ function Object4D() {
 		}
 	} );
 
-	this.matrix = new Matrix4();
-	this.matrixWorld = new Matrix4();
+	this.matrix = new Matrix5();
+	this.matrixWorld = new Matrix5();
 
 	this.matrixAutoUpdate = Object4D.DefaultMatrixAutoUpdate;
 	this.matrixWorldNeedsUpdate = false;

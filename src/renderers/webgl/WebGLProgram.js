@@ -488,10 +488,11 @@ function WebGLProgram( renderer, cacheKey, parameters ) {
 			parameters.logarithmicDepthBuffer ? '#define USE_LOGDEPTHBUF' : '',
 			( parameters.logarithmicDepthBuffer && parameters.rendererExtensionFragDepth ) ? '#define USE_LOGDEPTHBUF_EXT' : '',
 			
-			'#include <math_4d>',
+			'#include <structs_4d>',
 			'uniform mat5 modelMatrix;',
 			'uniform mat5 modelViewMatrix;',
-			'uniform mat5 projectionMatrix;',
+			'uniform mat4 projectionMatrix;',
+			'uniform mat5 projectionMatrix4D;',
 			'uniform mat5 viewMatrix;',
 			'uniform mat4 normalMatrix;',
 			'uniform vec4 cameraPosition;',
@@ -617,7 +618,7 @@ function WebGLProgram( renderer, cacheKey, parameters ) {
 
 			( ( parameters.extensionShaderTextureLOD || parameters.envMap ) && parameters.rendererExtensionShaderTextureLod ) ? '#define TEXTURE_LOD_EXT' : '',
 
-			'#include <math_4d>',
+			'#include <structs_4d>',
 			'uniform mat5 viewMatrix;',
 			'uniform vec4 cameraPosition;',
 			'uniform bool isOrthographic;',
@@ -697,7 +698,7 @@ function WebGLProgram( renderer, cacheKey, parameters ) {
 			'#define texture2DGradEXT textureGrad',
 			'#define texture2DProjGradEXT textureProjGrad',
 			'#define textureCubeGradEXT textureGrad',
-			'#include <math_4d>'
+			'#include <structs_4d>'
 		].join( '\n' ) + '\n' + prefixFragment;
 
 		// Multiview
@@ -717,7 +718,8 @@ function WebGLProgram( renderer, cacheKey, parameters ) {
 			prefixVertex = prefixVertex.replace(
 				[
 					'uniform mat5 modelViewMatrix;',
-					'uniform mat5 projectionMatrix;',
+					'uniform mat4 projectionMatrix;',
+					'uniform mat5 projectionMatrix4D;',
 					'uniform mat5 viewMatrix;',
 					'uniform mat4 normalMatrix;'
 				].join( '\n' ),
@@ -761,8 +763,8 @@ function WebGLProgram( renderer, cacheKey, parameters ) {
 	var vertexGlsl =  prefixVertex + vertexShader;
 	var fragmentGlsl =  prefixFragment + fragmentShader;
 
-	// console.log( '*VERTEX*', vertexGlsl );
-	// console.log( '*FRAGMENT*', fragmentGlsl );
+	console.log( '*VERTEX*\n\n', vertexGlsl );
+	console.log( '*FRAGMENT*\n\n', fragmentGlsl );
 
 	var glVertexShader = WebGLShader( gl, gl.VERTEX_SHADER, vertexGlsl );
 	var glFragmentShader = WebGLShader( gl, gl.FRAGMENT_SHADER, fragmentGlsl );

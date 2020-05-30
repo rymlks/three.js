@@ -17,10 +17,10 @@ function Camera4D() {
 
 	this.type = 'Camera4D';
 
+	this.matrixWorldInverse = new Matrix5();
+
 	this.projectionMatrix = new Matrix4();
 	this.projectionMatrixInverse = new Matrix4();
-
-	this.matrixWorldInverse = new Matrix4();
 
 	this.projectionMatrix4D = new Matrix5();
 	this.projectionMatrixInverse4D = new Matrix5();
@@ -41,9 +41,6 @@ Camera4D.prototype = Object.assign( Object.create( Object4D.prototype ), {
 
 		this.projectionMatrix.copy( source.projectionMatrix );
 		this.projectionMatrixInverse.copy( source.projectionMatrixInverse );
-
-		this.projectionMatrix4D.copy( source.projectionMatrix4D );
-		this.projectionMatrixInverse4D.copy( source.projectionMatrixInverse4D );
 
 		return this;
 

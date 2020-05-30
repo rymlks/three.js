@@ -1,3 +1,5 @@
 export default /* glsl */`
-vec3 transformed = vec3( position );
+///////////////////////////////////////////////////////////////////////////////////
+// begin_vertex
+vec4 transformed = vec4( position );
 `;

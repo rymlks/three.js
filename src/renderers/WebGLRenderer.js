@@ -175,7 +175,7 @@ function WebGLRenderer( parameters ) {
 
 		// camera matrices cache
 
-		_projScreenMatrix = new Matrix4(),
+		_projScreenMatrix = new Matrix5(),
 
 		_vector3 = new Vector3();
 
@@ -1734,6 +1734,7 @@ function WebGLRenderer( parameters ) {
 			} else {
 
 				p_uniforms.setValue( _gl, 'projectionMatrix', camera.projectionMatrix );
+				p_uniforms.setValue( _gl, 'projectionMatrix4D', camera.projectionMatrix4D );
 
 			}
 

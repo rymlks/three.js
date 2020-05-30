@@ -3,7 +3,7 @@
  */
 
 import { Uint16BufferAttribute, Uint32BufferAttribute } from '../../core/BufferAttribute.js';
-import { BufferGeometry } from '../../core/BufferGeometry.js';
+import { BufferGeometry4D } from '../../core/BufferGeometry4D.js';
 import { arrayMax } from '../../utils.js';
 
 function WebGLGeometries( gl, attributes, info ) {
@@ -63,7 +63,7 @@ function WebGLGeometries( gl, attributes, info ) {
 
 			if ( geometry._bufferGeometry === undefined ) {
 
-				geometry._bufferGeometry = new BufferGeometry().setFromObject( object );
+				geometry._bufferGeometry = new BufferGeometry4D().setFromObject( object );
 
 			}
 

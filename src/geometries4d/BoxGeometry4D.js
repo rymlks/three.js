@@ -3,14 +3,14 @@
  * @author Mugen87 / https://github.com/Mugen87
  */
 
-import { Geometry } from '../core/Geometry.js';
+import { Geometry4D } from '../core/Geometry4D.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { Vector4 } from '../math/Vector4_.js';
 
 // BoxGeometry
 
-class BoxGeometry4D extends Geometry {
+class BoxGeometry4D extends Geometry4D {
 
 	constructor( width, height, depth, widthSegments, heightSegments, depthSegments ) {
 
@@ -138,7 +138,7 @@ class BoxBufferGeometry4D extends BufferGeometry {
 					vector[ u ] = 0;
 					vector[ v ] = 0;
 					vector[ w ] = depth > 0 ? 1 : - 1;
-					vector[ w ] = 0;
+					vector[ 'w' ] = 0;
 
 					// now apply vector to normal buffer
 

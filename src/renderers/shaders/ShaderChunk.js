@@ -94,7 +94,7 @@ import uv2_pars_vertex from './ShaderChunk/uv2_pars_vertex.glsl.js';
 import uv2_vertex from './ShaderChunk/uv2_vertex.glsl.js';
 import worldpos_vertex from './ShaderChunk/worldpos_vertex.glsl.js';
 
-import math_4d from './ShaderChunk/math_4d.glsl.js';
+import structs_4d from './ShaderChunk/structs_4d.glsl.js';
 
 import background_frag from './ShaderLib/background_frag.glsl.js';
 import background_vert from './ShaderLib/background_vert.glsl.js';
@@ -258,5 +258,5 @@ export var ShaderChunk = {
 	shadow_vert: shadow_vert,
 	sprite_frag: sprite_frag,
 	sprite_vert: sprite_vert,
-	math_4d: math_4d
+	structs_4d: structs_4d
 };

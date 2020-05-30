@@ -1,5 +1,6 @@
 import { Vector3 } from './Vector3.js';
 import { Vector4 } from './Vector4_.js';
+import { Matrix4 } from './Matrix4.js';
 
 var _v1 = new Vector4();
 var _m1 = new Matrix5();
@@ -606,30 +607,30 @@ Object.assign( Matrix5.prototype, {
 	},
 
 	scale: function ( v ) {
-		console.error( 'THREE.Matrix5: .scale() is not done.' );
 
 		var te = this.elements;
-		var x = v.x, y = v.y, z = v.z;
+		var x = v.x, y = v.y, z = v.z, w = v.w;
 
-		te[ 0 ] *= x; te[ 4 ] *= y; te[ 8 ] *= z;
-		te[ 1 ] *= x; te[ 5 ] *= y; te[ 9 ] *= z;
-		te[ 2 ] *= x; te[ 6 ] *= y; te[ 10 ] *= z;
-		te[ 3 ] *= x; te[ 7 ] *= y; te[ 11 ] *= z;
+		te[ 0 ] *= x; te[ 5 ] *= y; te[ 10 ] *= z; te[ 15 ] *= w;
+		te[ 1 ] *= x; te[ 6 ] *= y; te[ 11 ] *= z; te[ 16 ] *= w;
+		te[ 2 ] *= x; te[ 7 ] *= y; te[ 12 ] *= z; te[ 17 ] *= w;
+		te[ 3 ] *= x; te[ 8 ] *= y; te[ 13 ] *= z; te[ 18 ] *= w;
+		te[ 4 ] *= x; te[ 9 ] *= y; te[ 14 ] *= z; te[ 19 ] *= w;
 
 		return this;
 
 	},
 
 	getMaxScaleOnAxis: function () {
-		console.error( 'THREE.Matrix5: .getMaxScaleOnAxis() is not done.' );
 
 		var te = this.elements;
 
-		var scaleXSq = te[ 0 ] * te[ 0 ] + te[ 1 ] * te[ 1 ] + te[ 2 ] * te[ 2 ];
-		var scaleYSq = te[ 4 ] * te[ 4 ] + te[ 5 ] * te[ 5 ] + te[ 6 ] * te[ 6 ];
-		var scaleZSq = te[ 8 ] * te[ 8 ] + te[ 9 ] * te[ 9 ] + te[ 10 ] * te[ 10 ];
+		var scaleXSq = te[ 0 ]  * te[ 0 ]  + te[ 1 ]  * te[ 1 ]  + te[ 2 ]  * te[ 2 ]  + te[ 3 ]  * te[ 3 ];
+		var scaleYSq = te[ 5 ]  * te[ 5 ]  + te[ 6 ]  * te[ 6 ]  + te[ 7 ]  * te[ 7 ]  + te[ 8 ]  * te[ 8 ];
+		var scaleZSq = te[ 10 ] * te[ 10 ] + te[ 11 ] * te[ 11 ] + te[ 12 ] * te[ 12 ] + te[ 13 ] * te[ 13 ];
+		var scaleWSq = te[ 15 ] * te[ 15 ] + te[ 16 ] * te[ 16 ] + te[ 17 ] * te[ 17 ] + te[ 18 ] * te[ 18 ];
 
-		return Math.sqrt( Math.max( scaleXSq, scaleYSq, scaleZSq ) );
+		return Math.sqrt( Math.max( scaleXSq, scaleYSq, scaleZSq, scaleWSq ) );
 
 	},
 
@@ -760,7 +761,7 @@ Object.assign( Matrix5.prototype, {
 	},
 
 	compose: function ( position, quaternion, scale ) {
-		console.error( 'THREE.Matrix5: .compose() is not done.' );
+		console.error( 'THREE.Matrix5: .compose() is partially unfinished.' );
 
 		var te = this.elements;
 
@@ -776,21 +777,31 @@ Object.assign( Matrix5.prototype, {
 		te[ 1 ] = ( xy + wz ) * sx;
 		te[ 2 ] = ( xz - wy ) * sx;
 		te[ 3 ] = 0;
+		te[ 4 ] = 0;
 
-		te[ 4 ] = ( xy - wz ) * sy;
-		te[ 5 ] = ( 1 - ( xx + zz ) ) * sy;
-		te[ 6 ] = ( yz + wx ) * sy;
-		te[ 7 ] = 0;
+		te[ 5 ] = ( xy - wz ) * sy;
+		te[ 6 ] = ( 1 - ( xx + zz ) ) * sy;
+		te[ 7 ] = ( yz + wx ) * sy;
+		te[ 8 ] = 0;
+		te[ 9 ] = 0;
 
-		te[ 8 ] = ( xz + wy ) * sz;
-		te[ 9 ] = ( yz - wx ) * sz;
-		te[ 10 ] = ( 1 - ( xx + yy ) ) * sz;
-		te[ 11 ] = 0;
+		te[ 10 ] = ( xz + wy ) * sz;
+		te[ 11 ] = ( yz - wx ) * sz;
+		te[ 12 ] = ( 1 - ( xx + yy ) ) * sz;
+		te[ 13 ] = 0;
+		te[ 14 ] = 0;
 
-		te[ 12 ] = position.x;
-		te[ 13 ] = position.y;
-		te[ 14 ] = position.z;
-		te[ 15 ] = 1;
+		te[ 15 ] = 0;
+		te[ 16 ] = 0;
+		te[ 17 ] = 0;
+		te[ 18 ] = 1;
+		te[ 19 ] = 0;
+
+		te[ 20 ] = position.x;
+		te[ 21 ] = position.y;
+		te[ 22 ] = position.z;
+		te[ 23 ] = position.w;
+		te[ 24 ] = 1;
 
 		return this;
 
@@ -842,7 +853,7 @@ Object.assign( Matrix5.prototype, {
 
 	},
 
-	makePerspective: function ( left, right, top, bottom, near, far ) {
+	makePerspective: function ( left, right, top, bottom, near, far, nearw, farw ) {
 		console.error( 'THREE.Matrix5: .makePerspective() is not done.' );
 
 		if ( far === undefined ) {
@@ -852,18 +863,19 @@ Object.assign( Matrix5.prototype, {
 		}
 
 		var te = this.elements;
-		var x = 2 * near / ( right - left );
-		var y = 2 * near / ( top - bottom );
+		var proj3d = new Matrix5();
+		var p3de = proj3d.elements;
+		var x = 2 * nearw / ( right - left );
+		var y = 2 * nearw / ( top - bottom );
+		var z = 2 * nearw / ( far - near );
 
-		var a = ( right + left ) / ( right - left );
-		var b = ( top + bottom ) / ( top - bottom );
-		var c = - ( far + near ) / ( far - near );
-		var d = - 2 * far * near / ( far - near );
+		te[ 0 ] = x;	te[ 5 ] = 0;	te[ 10 ] = 0;	te[ 15 ] = 0;	te[ 20 ] = 0;
+		te[ 1 ] = 0;	te[ 6 ] = y;	te[ 11 ] = 0;	te[ 16 ] = 0;	te[ 21 ] = 0;
+		te[ 2 ] = 0;	te[ 7 ] = 0;	te[ 12 ] = z;	te[ 17 ] = 0;	te[ 22 ] = 0;
+		te[ 3 ] = 0;	te[ 8 ] = 0;	te[ 13 ] = 0;	te[ 18 ] = 0;	te[ 23 ] = 0;
+		te[ 4 ] = 0;	te[ 9 ] = 0;	te[ 14 ] = 0;	te[ 19 ] = 1;	te[ 24 ] = 1;
 
-		te[ 0 ] = x;	te[ 4 ] = 0;	te[ 8 ] = a;	te[ 12 ] = 0;
-		te[ 1 ] = 0;	te[ 5 ] = y;	te[ 9 ] = b;	te[ 13 ] = 0;
-		te[ 2 ] = 0;	te[ 6 ] = 0;	te[ 10 ] = c;	te[ 14 ] = d;
-		te[ 3 ] = 0;	te[ 7 ] = 0;	te[ 11 ] = - 1;	te[ 15 ] = 0;
+		var proj3d = new Matrix5();
 
 		return this;
 

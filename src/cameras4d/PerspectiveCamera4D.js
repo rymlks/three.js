@@ -1,5 +1,5 @@
 import { Camera4D } from './Camera4D.js';
-import { Object3D } from '../core/Object3D.js';
+import { Object4D } from '../core/Object4D.js';
 import { MathUtils } from '../math/MathUtils.js';
 
 /**
@@ -9,7 +9,7 @@ import { MathUtils } from '../math/MathUtils.js';
  * @author tschw
  */
 
-function PerspectiveCamera4D( fov, aspect, near, far ) {
+function PerspectiveCamera4D( fov, aspect, near, far, nearw, farw ) {
 
 	Camera4D.call( this );
 
@@ -21,6 +21,9 @@ function PerspectiveCamera4D( fov, aspect, near, far ) {
 	this.near = near !== undefined ? near : 0.1;
 	this.far = far !== undefined ? far : 2000;
 	this.focus = 10;
+
+	this.nearw = nearw !== undefined ? nearw : 0.1;
+	this.farw = farw !== undefined ? farw : 2000;
 
 	this.aspect = aspect !== undefined ? aspect : 1;
 	this.view = null;
@@ -213,6 +216,10 @@ PerspectiveCamera4D.prototype = Object.assign( Object.create( Camera4D.prototype
 		this.projectionMatrix.makePerspective( left, left + width, top, top - height, near, this.far );
 
 		this.projectionMatrixInverse.getInverse( this.projectionMatrix );
+
+		this.projectionMatrix4D.makePerspective( left, left + width, top, top - height, near, this.far, this.nearw, this.farw );
+
+		this.projectionMatrixInverse4D.getInverse( this.projectionMatrix4D );
 
 	},
 
