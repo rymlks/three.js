@@ -1,6 +1,4 @@
 export default /* glsl */`
-///////////////////////////////////////////////////////////////////////////////////
-// defaultnormal_vertex
 vec4 transformedNormal = objectNormal;
 
 #ifdef USE_INSTANCING

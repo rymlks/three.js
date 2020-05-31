@@ -5,11 +5,11 @@ uniform vec3 lightProbe[ 9 ];
 
 // get the irradiance (radiance convolved with cosine lobe) at the point 'normal' on the unit sphere
 // source: https://graphics.stanford.edu/papers/envmap/envmap.pdf
-vec3 shGetIrradianceAt( in vec3 normal, in vec3 shCoefficients[ 9 ] ) {
+vec3 shGetIrradianceAt( in vec4 normal, in vec3 shCoefficients[ 9 ] ) {
 
 	// normal is assumed to have unit length
 
-	float x = normal.x, y = normal.y, z = normal.z;
+	float x = normal.x, y = normal.y, z = normal.z, w = normal.w;
 
 	// band 0
 	vec3 result = shCoefficients[ 0 ] * 0.886227;
@@ -32,7 +32,7 @@ vec3 shGetIrradianceAt( in vec3 normal, in vec3 shCoefficients[ 9 ] ) {
 
 vec3 getLightProbeIrradiance( const in vec3 lightProbe[ 9 ], const in GeometricContext geometry ) {
 
-	vec3 worldNormal = inverseTransformDirection( geometry.normal, viewMatrix );
+	vec4 worldNormal = inverseTransformDirection( geometry.normal, viewMatrix );
 
 	vec3 irradiance = shGetIrradianceAt( worldNormal, lightProbe );
 

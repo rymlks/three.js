@@ -36,6 +36,12 @@ function Matrix5() {
 
 	];
 
+	var m11, m21, m31, m41, m51,
+		m12, m22, m32, m42, m52,
+		m13, m23, m33, m43, m53,
+		m14, m24, m34, m44, m54,
+		m15, m25, m35, m45, m55;
+
 	if ( arguments.length > 0 ) {
 
 		console.error( 'THREE.Matrix5: the constructor no longer reads arguments. use .set() instead.' );
@@ -46,7 +52,7 @@ function Matrix5() {
 
 Object.assign( Matrix5.prototype, {
 
-	isMatrix4: true,
+	isMatrix5: true,
 
 	set: function ( n11, n12, n13, n14, n15, n21, n22, n23, n24, n25, n31, n32, n33, n34, n35, n41, n42, n43, n44, n45, n51, n52, n53, n54, n55 ) {
 
@@ -58,6 +64,7 @@ Object.assign( Matrix5.prototype, {
 		te[ 3 ] = n41; te[ 8 ] = n42; te[ 13 ] = n43; te[ 18 ] = n44; te[ 23 ] = n45;
 		te[ 4 ] = n51; te[ 9 ] = n52; te[ 14 ] = n53; te[ 19 ] = n54; te[ 24 ] = n55;
 
+		
 		return this;
 
 	},
@@ -74,6 +81,7 @@ Object.assign( Matrix5.prototype, {
 
 		);
 
+		
 		return this;
 
 	},
@@ -95,6 +103,7 @@ Object.assign( Matrix5.prototype, {
 		te[ 15 ] = me[ 15 ]; te[ 16 ] = me[ 16 ];  te[ 17 ] = me[ 17 ];  te[ 18 ] = me[ 18 ];  te[ 19 ] = me[ 19 ]; 
 		te[ 20 ] = me[ 20 ]; te[ 21 ] = me[ 21 ];  te[ 22 ] = me[ 22 ];  te[ 23 ] = me[ 23 ];  te[ 24 ] = me[ 24 ]; 
 
+		
 		return this;
 
 	},
@@ -108,6 +117,7 @@ Object.assign( Matrix5.prototype, {
 		te[ 22 ] = me[ 22 ];
 		te[ 23 ] = me[ 23 ];
 
+		
 		return this;
 
 	},
@@ -119,6 +129,7 @@ Object.assign( Matrix5.prototype, {
 		zAxis.setFromMatrixColumn( this, 2 );
 		wAxis.setFromMatrixColumn( this, 3 );
 
+		
 		return this;
 
 	},
@@ -133,6 +144,7 @@ Object.assign( Matrix5.prototype, {
 			0, 0, 0, 0, 1
 		);
 
+		
 		return this;
 
 	},
@@ -179,6 +191,7 @@ Object.assign( Matrix5.prototype, {
 		te[ 23 ] = 0;
 		te[ 24 ] = 1;
 
+		
 		return this;
 
 	},
@@ -308,6 +321,7 @@ Object.assign( Matrix5.prototype, {
 		te[ 14 ] = 0;
 		te[ 15 ] = 1;
 
+		
 		return this;
 
 	},
@@ -363,6 +377,7 @@ Object.assign( Matrix5.prototype, {
 		te[ 1 ] = _x.y; te[ 5 ] = _y.y; te[ 9 ] = _z.y;
 		te[ 2 ] = _x.z; te[ 6 ] = _y.z; te[ 10 ] = _z.z;
 
+		
 		return this;
 
 	},
@@ -410,30 +425,31 @@ Object.assign( Matrix5.prototype, {
 		te[ 15 ] = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44 + a15 * b54;
 		te[ 20 ] = a11 * b15 + a12 * b25 + a13 * b35 + a14 * b45 + a15 * b55;
 
-		te[ 1 ]  = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41 + a24 * b51;
-		te[ 6 ]  = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42 + a24 * b52;
-		te[ 11 ] = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43 + a24 * b53;
-		te[ 16 ] = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44 + a24 * b54;
-		te[ 21 ] = a21 * b15 + a22 * b25 + a23 * b35 + a24 * b45 + a24 * b55;
+		te[ 1 ]  = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41 + a25 * b51;
+		te[ 6 ]  = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42 + a25 * b52;
+		te[ 11 ] = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43 + a25 * b53;
+		te[ 16 ] = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44 + a25 * b54;
+		te[ 21 ] = a21 * b15 + a22 * b25 + a23 * b35 + a24 * b45 + a25 * b55;
 
-		te[ 2 ]  = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41 + a34 * b51;
-		te[ 7 ]  = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42 + a34 * b52;
-		te[ 12 ] = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43 + a34 * b53;
-		te[ 17 ] = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44 + a34 * b54;
-		te[ 22 ] = a31 * b15 + a32 * b25 + a33 * b35 + a34 * b45 + a34 * b55;
+		te[ 2 ]  = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41 + a35 * b51;
+		te[ 7 ]  = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42 + a35 * b52;
+		te[ 12 ] = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43 + a35 * b53;
+		te[ 17 ] = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44 + a35 * b54;
+		te[ 22 ] = a31 * b15 + a32 * b25 + a33 * b35 + a34 * b45 + a35 * b55;
 
-		te[ 3 ]  = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41 + a44 * b51;
-		te[ 8 ]  = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42 + a44 * b52;
-		te[ 13 ] = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43 + a44 * b53;
-		te[ 18 ] = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44 + a44 * b54;
-		te[ 23 ] = a41 * b15 + a42 * b25 + a43 * b35 + a44 * b45 + a44 * b55;
+		te[ 3 ]  = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41 + a45 * b51;
+		te[ 8 ]  = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42 + a45 * b52;
+		te[ 13 ] = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43 + a45 * b53;
+		te[ 18 ] = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44 + a45 * b54;
+		te[ 23 ] = a41 * b15 + a42 * b25 + a43 * b35 + a44 * b45 + a45 * b55;
 
-		te[ 4 ]  = a51 * b11 + a52 * b21 + a53 * b31 + a54 * b41 + a54 * b51;
-		te[ 9 ]  = a51 * b12 + a52 * b22 + a53 * b32 + a54 * b42 + a54 * b52;
-		te[ 14 ] = a51 * b13 + a52 * b23 + a53 * b33 + a54 * b43 + a54 * b53;
-		te[ 19 ] = a51 * b14 + a52 * b24 + a53 * b34 + a54 * b44 + a54 * b54;
-		te[ 24 ] = a51 * b14 + a52 * b24 + a53 * b34 + a54 * b44 + a54 * b55;
+		te[ 4 ]  = a51 * b11 + a52 * b21 + a53 * b31 + a54 * b41 + a55 * b51;
+		te[ 9 ]  = a51 * b12 + a52 * b22 + a53 * b32 + a54 * b42 + a55 * b52;
+		te[ 14 ] = a51 * b13 + a52 * b23 + a53 * b33 + a54 * b43 + a55 * b53;
+		te[ 19 ] = a51 * b14 + a52 * b24 + a53 * b34 + a54 * b44 + a55 * b54;
+		te[ 24 ] = a51 * b15 + a52 * b25 + a53 * b35 + a54 * b45 + a55 * b55;
 
+		
 		return this;
 
 	},
@@ -448,12 +464,13 @@ Object.assign( Matrix5.prototype, {
 		te[ 3 ] *= s; te[ 8 ] *= s; te[ 13 ] *= s; te[ 18 ] *= s; te[ 23 ] *= s;
 		te[ 4 ] *= s; te[ 9 ] *= s; te[ 14 ] *= s; te[ 19 ] *= s; te[ 24 ] *= s;
 
+		
 		return this;
 
 	},
 
 	determinant: function () {
-		console.error( 'THREE.Matrix5: .determinant() is super inefficient.' );
+		//console.warn( 'THREE.Matrix5: .determinant() is super inefficient.' );
 
 		var te = this.elements;
 
@@ -490,6 +507,7 @@ Object.assign( Matrix5.prototype, {
 		tmp = te[ 7 ]; te[ 7 ] = te[ 13 ]; te[ 13 ] = tmp;
 		tmp = te[ 11 ]; te[ 11 ] = te[ 14 ]; te[ 14 ] = tmp;
 
+		
 		return this;
 
 	},
@@ -514,22 +532,15 @@ Object.assign( Matrix5.prototype, {
 
 		}
 
+		
 		return this;
 
 	},
 
 	getInverse: function ( m, throwOnDegenerate ) {
-		console.error( 'THREE.Matrix5: .getInverse() is outrageously inefficient.' );
-
 		// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
 		var te = this.elements,
-			me = m.elements,
-
-			n11 = me[ 0 ],  n21 = me[ 1 ],  n31 = me[ 2 ],  n41 = me[ 3 ],  n51 = me[ 4 ],
-			n12 = me[ 5 ],  n22 = me[ 6 ],  n32 = me[ 7 ],  n42 = me[ 8 ],  n52 = me[ 9 ],
-			n13 = me[ 10 ], n23 = me[ 11 ], n33 = me[ 12 ], n43 = me[ 13 ], n53 = me[ 14 ],
-			n14 = me[ 15 ], n24 = me[ 16 ], n34 = me[ 17 ], n44 = me[ 18 ], n54 = me[ 19 ],
-			n15 = me[ 20 ], n25 = me[ 21 ], n35 = me[ 22 ], n45 = me[ 23 ], n55 = me[ 24 ];
+			me = m.elements;
 
 		var det = this.determinant();
 
@@ -592,14 +603,14 @@ Object.assign( Matrix5.prototype, {
 			tm54 = new Matrix4().set(t11, t21, t31, t41, t12, t22, t32, t42, t13, t23, t33, t43, t15, t25, t35, t45).determinant(),
 			tm55 = new Matrix4().set(t11, t21, t31, t41, t12, t22, t32, t42, t13, t23, t33, t43, t14, t24, t34, t44).determinant();
 
-		var adjunct = new Matrix5().set( tm11, -tm12,  tm13, -tm14,  tm15,
+		var transpose_minors = new Matrix5().set( tm11, -tm12,  tm13, -tm14,  tm15,
 										-tm21,  tm22, -tm23,  tm24, -tm25,
  										 tm31, -tm32,  tm33, -tm34,  tm35,
 										-tm41,  tm42, -tm43,  tm44, -tm45,
-										 tm51, -tm52,  tm53, -tm54,  tm55,).scale(detInv)
+										 tm51, -tm52,  tm53, -tm54,  tm55,)
 		
-		for (var i=0; i<adjunct.elements.length; i++) {
-			te[i] = adjunct.elements[i]
+		for (var i=0; i<transpose_minors.elements.length; i++) {
+			te[i] = transpose_minors.elements[i] * detInv;
 		}
 
 		return this;
@@ -646,6 +657,7 @@ Object.assign( Matrix5.prototype, {
 
 		);
 
+		
 		return this;
 
 	},
@@ -664,6 +676,7 @@ Object.assign( Matrix5.prototype, {
 
 		);
 
+		
 		return this;
 
 	},
@@ -682,6 +695,7 @@ Object.assign( Matrix5.prototype, {
 
 		);
 
+		
 		return this;
 
 	},
@@ -700,6 +714,7 @@ Object.assign( Matrix5.prototype, {
 
 		);
 
+		
 		return this;
 
 	},
@@ -724,7 +739,8 @@ Object.assign( Matrix5.prototype, {
 
 		);
 
-		 return this;
+		
+		return this;
 
 	},
 
@@ -740,6 +756,7 @@ Object.assign( Matrix5.prototype, {
 
 		);
 
+		
 		return this;
 
 	},
@@ -756,12 +773,13 @@ Object.assign( Matrix5.prototype, {
 
 		);
 
+		
 		return this;
 
 	},
 
 	compose: function ( position, quaternion, scale ) {
-		console.error( 'THREE.Matrix5: .compose() is partially unfinished.' );
+		//console.warn( 'THREE.Matrix5: .compose() is partially unfinished.' );
 
 		var te = this.elements;
 
@@ -803,6 +821,7 @@ Object.assign( Matrix5.prototype, {
 		te[ 23 ] = position.w;
 		te[ 24 ] = 1;
 
+		
 		return this;
 
 	},
@@ -849,6 +868,7 @@ Object.assign( Matrix5.prototype, {
 		scale.y = sy;
 		scale.z = sz;
 
+		
 		return this;
 
 	},
@@ -863,20 +883,17 @@ Object.assign( Matrix5.prototype, {
 		}
 
 		var te = this.elements;
-		var proj3d = new Matrix5();
-		var p3de = proj3d.elements;
 		var x = 2 * nearw / ( right - left );
 		var y = 2 * nearw / ( top - bottom );
 		var z = 2 * nearw / ( far - near );
 
-		te[ 0 ] = x;	te[ 5 ] = 0;	te[ 10 ] = 0;	te[ 15 ] = 0;	te[ 20 ] = 0;
-		te[ 1 ] = 0;	te[ 6 ] = y;	te[ 11 ] = 0;	te[ 16 ] = 0;	te[ 21 ] = 0;
-		te[ 2 ] = 0;	te[ 7 ] = 0;	te[ 12 ] = z;	te[ 17 ] = 0;	te[ 22 ] = 0;
-		te[ 3 ] = 0;	te[ 8 ] = 0;	te[ 13 ] = 0;	te[ 18 ] = 0;	te[ 23 ] = 0;
-		te[ 4 ] = 0;	te[ 9 ] = 0;	te[ 14 ] = 0;	te[ 19 ] = 1;	te[ 24 ] = 1;
+		te[ 0 ] = 1;	te[ 5 ] = 0;	te[ 10 ] = 0;	te[ 15 ] = 0;	te[ 20 ] = 0;
+		te[ 1 ] = 0;	te[ 6 ] = 1;	te[ 11 ] = 0;	te[ 16 ] = 0;	te[ 21 ] = 0;
+		te[ 2 ] = 0;	te[ 7 ] = 0;	te[ 12 ] = 1;	te[ 17 ] = 0;	te[ 22 ] = 0;
+		te[ 3 ] = 0;	te[ 8 ] = 0;	te[ 13 ] = 0;	te[ 18 ] = 1;	te[ 23 ] = 0;
+		te[ 4 ] = 0;	te[ 9 ] = 0;	te[ 14 ] = 0;	te[ 19 ] = 0;	te[ 24 ] = 1;
 
-		var proj3d = new Matrix5();
-
+		
 		return this;
 
 	},
@@ -898,6 +915,8 @@ Object.assign( Matrix5.prototype, {
 		te[ 2 ] = 0;	te[ 6 ] = 0;	te[ 10 ] = - 2 * p;	te[ 14 ] = - z;
 		te[ 3 ] = 0;	te[ 7 ] = 0;	te[ 11 ] = 0;	te[ 15 ] = 1;
 
+		
+
 		return this;
 
 	},
@@ -914,6 +933,8 @@ Object.assign( Matrix5.prototype, {
 
 		}
 
+		
+
 		return true;
 
 	},
@@ -928,6 +949,8 @@ Object.assign( Matrix5.prototype, {
 			this.elements[ i ] = array[ i + offset ];
 
 		}
+
+		
 
 		return this;
 
@@ -963,6 +986,16 @@ Object.assign( Matrix5.prototype, {
 
 		return array;
 
+	},
+
+	updateProperties: function () {
+		var te = this.elements;
+
+		this.m11 = te[ 0 ];  this.m21 = te[ 1 ];  this.m31 = te[ 2 ];  this.m41 = te[ 3 ];  this.m51 = te[ 4 ];
+		this.m12 = te[ 5 ];  this.m22 = te[ 6 ];  this.m32 = te[ 7 ];  this.m42 = te[ 8 ];  this.m52 = te[ 9 ];
+		this.m13 = te[ 10 ]; this.m23 = te[ 11 ]; this.m33 = te[ 12 ]; this.m43 = te[ 13 ]; this.m53 = te[ 14 ];
+		this.m14 = te[ 15 ]; this.m24 = te[ 16 ]; this.m34 = te[ 17 ]; this.m44 = te[ 18 ]; this.m54 = te[ 19 ];
+		this.m15 = te[ 20 ]; this.m25 = te[ 21 ]; this.m35 = te[ 22 ]; this.m45 = te[ 23 ]; this.m55 = te[ 24 ];
 	}
 
 } );

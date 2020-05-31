@@ -1,6 +1,4 @@
 export default /* glsl */`
-///////////////////////////////////////////////////////////////////////////////////
-// common
 #define PI 3.14159265359
 #define PI2 6.28318530718
 #define PI_HALF 1.5707963267949
@@ -66,20 +64,12 @@ vec4 xyzw(vec5 v) {
 	return vec4(v.x, v.y, v.z, v.w);
 }
 
-vec4 perspectiveClampV(vec5 v) {
-	return vec4(v.x / v.v, v.y / v.v, v.z / v.v, v.w / v.v);
-}
-
-vec4 castv4(vec5 v) {
-	return vec4(v.x, v.y, v.z, 1.0);
-} 
-
 vec5 multiply(vec5 v, mat5 m) {
 
-	float x = v.x*m.m11 + v.y*m.m21 + v.z*m.m31 + v.w*m.m41 + v.v*m.m51;
-	float y = v.x*m.m12 + v.y*m.m22 + v.z*m.m32 + v.w*m.m42 + v.v*m.m52;
-	float z = v.x*m.m13 + v.y*m.m23 + v.z*m.m33 + v.w*m.m43 + v.v*m.m53;
-	float w = v.x*m.m14 + v.y*m.m24 + v.z*m.m34 + v.w*m.m44 + v.v*m.m54;
+	float x  = v.x*m.m11 + v.y*m.m21 + v.z*m.m31 + v.w*m.m41 + v.v*m.m51;
+	float y  = v.x*m.m12 + v.y*m.m22 + v.z*m.m32 + v.w*m.m42 + v.v*m.m52;
+	float z  = v.x*m.m13 + v.y*m.m23 + v.z*m.m33 + v.w*m.m43 + v.v*m.m53;
+	float w  = v.x*m.m14 + v.y*m.m24 + v.z*m.m34 + v.w*m.m44 + v.v*m.m54;
 	float _v = v.x*m.m15 + v.y*m.m25 + v.z*m.m35 + v.w*m.m45 + v.v*m.m55;
 
 	return vec5( x, y, z, w, _v );
@@ -88,10 +78,10 @@ vec5 multiply(vec5 v, mat5 m) {
 
 vec5 multiply(mat5 m, vec5 v) {
 
-	float x = v.x*m.m11 + v.y*m.m12 + v.z*m.m13 + v.w*m.m14 + v.v*m.m15;
-	float y = v.x*m.m21 + v.y*m.m22 + v.z*m.m23 + v.w*m.m24 + v.v*m.m25;
-	float z = v.x*m.m31 + v.y*m.m32 + v.z*m.m33 + v.w*m.m34 + v.v*m.m35;
-	float w = v.x*m.m41 + v.y*m.m42 + v.z*m.m43 + v.w*m.m44 + v.v*m.m45;
+	float x  = v.x*m.m11 + v.y*m.m12 + v.z*m.m13 + v.w*m.m14 + v.v*m.m15;
+	float y  = v.x*m.m21 + v.y*m.m22 + v.z*m.m23 + v.w*m.m24 + v.v*m.m25;
+	float z  = v.x*m.m31 + v.y*m.m32 + v.z*m.m33 + v.w*m.m34 + v.v*m.m35;
+	float w  = v.x*m.m41 + v.y*m.m42 + v.z*m.m43 + v.w*m.m44 + v.v*m.m45;
 	float _v = v.x*m.m51 + v.y*m.m52 + v.z*m.m53 + v.w*m.m54 + v.v*m.m55;
 
 	return vec5( x, y, z, w, _v );

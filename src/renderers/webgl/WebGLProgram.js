@@ -207,7 +207,9 @@ function resolveIncludes( string ) {
 
 function includeReplacer( match, include ) {
 
-	var string = ShaderChunk[ include ];
+	var header = "///////////////////////////////////////////////////////////////////////////////////\n// ";
+	header += match + "\n";
+	var string = header + ShaderChunk[ include ];
 
 	if ( string === undefined ) {
 

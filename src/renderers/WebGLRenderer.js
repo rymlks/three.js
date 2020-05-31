@@ -1172,7 +1172,7 @@ function WebGLRenderer( parameters ) {
 
 		scene.onBeforeRender( _this, scene, camera, renderTarget || _currentRenderTarget );
 
-		_projScreenMatrix.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
+		_projScreenMatrix.multiplyMatrices( camera.projectionMatrix4D, camera.matrixWorldInverse );
 		_frustum.setFromProjectionMatrix( _projScreenMatrix );
 
 		_localClippingEnabled = this.localClippingEnabled;

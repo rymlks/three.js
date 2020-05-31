@@ -738,6 +738,8 @@ StructuredUniform.prototype.setValue = function ( gl, value, textures ) {
 
 	var seq = this.seq;
 
+	if (value.isMatrix5) value.updateProperties();
+
 	for ( var i = 0, n = seq.length; i !== n; ++ i ) {
 
 		var u = seq[ i ];
