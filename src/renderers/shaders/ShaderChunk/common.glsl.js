@@ -37,7 +37,7 @@ highp float rand( const in vec2 uv ) {
 
 struct IncidentLight {
 	vec3 color;
-	vec3 direction;
+	vec4 direction;
 	bool visible;
 };
 
@@ -49,11 +49,11 @@ struct ReflectedLight {
 };
 
 struct GeometricContext {
-	vec3 position;
-	vec3 normal;
-	vec3 viewDir;
+	vec4 position;
+	vec4 normal;
+	vec4 viewDir;
 #ifdef CLEARCOAT
-	vec3 clearcoatNormal;
+	vec4 clearcoatNormal;
 #endif
 };
 
@@ -103,15 +103,6 @@ vec4 inverseTransformDirection( in vec4 dir, in mat5 matrix ) {
 vec3 transformDirection( in vec3 dir, in mat4 matrix ) {
 
 	return normalize( ( matrix * vec4( dir, 0.0 ) ).xyz );
-
-}
-
-vec3 inverseTransformDirection( in vec3 dir, in mat4 matrix ) {
-
-	// dir can be either a direction vector or a normal vector
-	// upper-left 3x3 of matrix is assumed to be orthogonal
-
-	return normalize( ( vec4( dir, 0.0 ) * matrix ).xyz );
 
 }
 

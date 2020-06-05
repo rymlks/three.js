@@ -344,7 +344,7 @@ Object4D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		} else {
 
-			console.error( "THREE.Object4D.add: object not an instance of THREE.Object3D.", object );
+			console.error( "THREE.Object4D.add: object not an instance of THREE.Object4D.", object );
 
 		}
 

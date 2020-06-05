@@ -78,7 +78,7 @@ void main() {
 
 	#endif
 
-	reflectedLight.directDiffuse *= BRDF_Diffuse_Lambert( diffuseColor.rgb ) * getShadowMask();
+	//reflectedLight.directDiffuse *= BRDF_Diffuse_Lambert( diffuseColor.rgb ) * getShadowMask();
 
 	// modulation
 	#include <aomap_fragment>
@@ -88,6 +88,9 @@ void main() {
 	#include <envmap_fragment>
 
 	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+
+	// debug
+	//gl_FragColor = vec4( diffuseColor.rgb, 1.0 );
 
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>

@@ -225,9 +225,9 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 				scope.colors[ c ].clone() ];
 
 			var vertexNormals = ( normals === undefined ) ? [] : [
-				new Vector4().fromArray( normals, a * 3 ),
-				new Vector4().fromArray( normals, b * 3 ),
-				new Vector4().fromArray( normals, c * 3 )
+				new Vector4().fromArray( normals, a * 4 ),
+				new Vector4().fromArray( normals, b * 4 ),
+				new Vector4().fromArray( normals, c * 4 )
 			];
 
 			var face = new Face4( a, b, c, vertexNormals, vertexColors, materialIndex );
@@ -376,7 +376,9 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 			cb.normalize();
 
-			face.normal.copy( cb );
+			var cb4 = new Vector4(cb.x, cb.y, cb.z, 1.0).normalize();
+
+			face.normal.copy( cb4 );
 
 		}
 
@@ -392,7 +394,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 		for ( v = 0, vl = this.vertices.length; v < vl; v ++ ) {
 
-			vertices[ v ] = new Vector3();
+			vertices[ v ] = new Vector4();
 
 		}
 
@@ -416,9 +418,11 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 				ab.subVectors( vA, vB );
 				cb.cross( ab );
 
-				vertices[ face.a ].add( cb );
-				vertices[ face.b ].add( cb );
-				vertices[ face.c ].add( cb );
+				cb4 = new Vector4(cb.x, cb.y, cb.z, 0.0);
+
+				vertices[ face.a ].add( cb4 );
+				vertices[ face.b ].add( cb4 );
+				vertices[ face.c ].add( cb4 );
 
 			}
 

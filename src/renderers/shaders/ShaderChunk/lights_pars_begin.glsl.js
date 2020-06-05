@@ -57,7 +57,7 @@ vec3 getAmbientLightIrradiance( const in vec3 ambientLightColor ) {
 #if NUM_DIR_LIGHTS > 0
 
 	struct DirectionalLight {
-		vec3 direction;
+		vec4 direction;
 		vec3 color;
 
 		int shadow;
@@ -82,7 +82,7 @@ vec3 getAmbientLightIrradiance( const in vec3 ambientLightColor ) {
 #if NUM_POINT_LIGHTS > 0
 
 	struct PointLight {
-		vec3 position;
+		vec4 position;
 		vec3 color;
 		float distance;
 		float decay;
@@ -100,7 +100,7 @@ vec3 getAmbientLightIrradiance( const in vec3 ambientLightColor ) {
 	// directLight is an out parameter as having it as a return value caused compiler errors on some devices
 	void getPointDirectLightIrradiance( const in PointLight pointLight, const in GeometricContext geometry, out IncidentLight directLight ) {
 
-		vec3 lVector = pointLight.position - geometry.position;
+		vec4 lVector = pointLight.position - geometry.position;
 		directLight.direction = normalize( lVector );
 
 		float lightDistance = length( lVector );

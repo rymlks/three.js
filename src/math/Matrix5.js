@@ -604,10 +604,10 @@ Object.assign( Matrix5.prototype, {
 			tm55 = new Matrix4().set(t11, t21, t31, t41, t12, t22, t32, t42, t13, t23, t33, t43, t14, t24, t34, t44).determinant();
 
 		var transpose_minors = new Matrix5().set( tm11, -tm12,  tm13, -tm14,  tm15,
-										-tm21,  tm22, -tm23,  tm24, -tm25,
- 										 tm31, -tm32,  tm33, -tm34,  tm35,
-										-tm41,  tm42, -tm43,  tm44, -tm45,
-										 tm51, -tm52,  tm53, -tm54,  tm55,)
+												 -tm21,  tm22, -tm23,  tm24, -tm25,
+		 										  tm31, -tm32,  tm33, -tm34,  tm35,
+												 -tm41,  tm42, -tm43,  tm44, -tm45,
+												  tm51, -tm52,  tm53, -tm54,  tm55,)
 		
 		for (var i=0; i<transpose_minors.elements.length; i++) {
 			te[i] = transpose_minors.elements[i] * detInv;

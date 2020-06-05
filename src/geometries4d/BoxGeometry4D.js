@@ -138,7 +138,9 @@ class BoxBufferGeometry4D extends BufferGeometry {
 					vector[ u ] = 0;
 					vector[ v ] = 0;
 					vector[ w ] = depth > 0 ? 1 : - 1;
-					vector[ 'w' ] = 0;
+					vector[ 'w' ] = 1;
+
+					vector.normalize();
 
 					// now apply vector to normal buffer
 
