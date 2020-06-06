@@ -645,76 +645,126 @@ Object.assign( Matrix5.prototype, {
 
 	},
 
-	makeTranslation: function ( x, y, z ) {
-		console.error( 'THREE.Matrix5: .makeTranslation() is not done.' );
+	makeTranslation: function ( x, y, z, w ) {
 
 		this.set(
 
-			1, 0, 0, x,
-			0, 1, 0, y,
-			0, 0, 1, z,
-			0, 0, 0, 1
+			1, 0, 0, 0, x,
+			0, 1, 0, 0, y,
+			0, 0, 1, 0, z,
+			0, 0, 0, 1, w,
+			0, 0, 0, 0, 1
 
 		);
 
-		
 		return this;
 
 	},
 
-	makeRotationX: function ( theta ) {
-		console.error( 'THREE.Matrix5: .makeRotationX() is not done.' );
+	makeRotationYZ: function ( theta ) {
 
 		var c = Math.cos( theta ), s = Math.sin( theta );
 
 		this.set(
 
-			1, 0, 0, 0,
-			0, c, - s, 0,
-			0, s, c, 0,
-			0, 0, 0, 1
+			1, 0, 0, 0, 0,
+			0, c,-s, 0, 0,
+			0, s, c, 0, 0,
+			0, 0, 0, 1, 0,
+			0, 0, 0, 0, 1
 
 		);
 
-		
 		return this;
 
 	},
 
-	makeRotationY: function ( theta ) {
-		console.error( 'THREE.Matrix5: .makeRotationY() is not done.' );
+	makeRotationZX: function ( theta ) {
 
 		var c = Math.cos( theta ), s = Math.sin( theta );
 
 		this.set(
 
-			 c, 0, s, 0,
-			 0, 1, 0, 0,
-			- s, 0, c, 0,
-			 0, 0, 0, 1
+			 c, 0, s, 0, 0,
+			 0, 1, 0, 0, 0,
+			-s, 0, c, 0, 0,
+			 0, 0, 0, 1, 0,
+			 0, 0, 0, 0, 1
 
 		);
 
-		
 		return this;
 
 	},
 
-	makeRotationZ: function ( theta ) {
-		console.error( 'THREE.Matrix5: .makeRotationZ() is not done.' );
+	makeRotationXY: function ( theta ) {
 
 		var c = Math.cos( theta ), s = Math.sin( theta );
 
 		this.set(
 
-			c, - s, 0, 0,
-			s, c, 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 1
+			c,-s, 0, 0, 0,
+			s, c, 0, 0, 0,
+			0, 0, 1, 0, 0,
+			0, 0, 0, 1, 0,
+			0, 0, 0, 0, 1
 
 		);
 
-		
+		return this;
+
+	},
+
+	makeRotationXW: function ( theta ) {
+
+		var c = Math.cos( theta ), s = Math.sin( theta );
+
+		this.set(
+
+			c, 0, 0,-s, 0,
+			0, 1, 0, 0, 0,
+			0, 0, 1, 0, 0,
+			s, 0, 0, c, 0,
+			0, 0, 0, 0, 1
+
+		);
+
+		return this;
+
+	},
+
+	makeRotationYW: function ( theta ) {
+
+		var c = Math.cos( theta ), s = Math.sin( theta );
+
+		this.set(
+
+			1, 0, 0, 0, 0,
+			0, c, 0,-s, 0,
+			0, 0, 1, 0, 0,
+			0, s, 0, c, 0,
+			0, 0, 0, 0, 1
+
+		);
+
+		return this;
+
+	},
+
+	makeRotationZW: function ( theta ) {
+
+		var c = Math.cos( theta ), s = Math.sin( theta );
+
+		this.set(
+
+			1, 0, 0, 0, 0,
+			0, 1, 0, 0, 0,
+			0, 0, c,-s, 0,
+			0, 0, s, c, 0,
+			0, 0, 0, 0, 1
+
+		);
+
 		return this;
 
 	},
@@ -739,24 +789,22 @@ Object.assign( Matrix5.prototype, {
 
 		);
 
-		
 		return this;
 
 	},
 
-	makeScale: function ( x, y, z ) {
-		console.error( 'THREE.Matrix5: .makeScale() is not done.' );
+	makeScale: function ( x, y, z, w ) {
 
 		this.set(
 
-			x, 0, 0, 0,
-			0, y, 0, 0,
-			0, 0, z, 0,
-			0, 0, 0, 1
+			x, 0, 0, 0, 0,
+			0, y, 0, 0, 0,
+			0, 0, z, 0, 0,
+			0, 0, 0, w, 0,
+			0, 0, 0, 0, 1
 
 		);
 
-		
 		return this;
 
 	},
@@ -766,20 +814,20 @@ Object.assign( Matrix5.prototype, {
 
 		this.set(
 
-			1, y, z, 0,
-			x, 1, z, 0,
-			x, y, 1, 0,
-			0, 0, 0, 1
+			1, y, z, 0, 0,
+			x, 1, z, 0, 0,
+			x, y, 1, 0, 0,
+			0, 0, 0, 1, 0,
+			0, 0, 0, 0, 1
 
 		);
 
-		
 		return this;
 
 	},
 
 	compose: function ( position, quaternion, scale ) {
-		//console.warn( 'THREE.Matrix5: .compose() is partially unfinished.' );
+		console.warn( 'THREE.Matrix5: .compose() expects a 4d quaternion, which is not yet supported.' );
 
 		var te = this.elements;
 
@@ -826,6 +874,39 @@ Object.assign( Matrix5.prototype, {
 
 	},
 
+	composeEuler: function ( position, euler, scale ) {
+		//console.warn( 'THREE.Matrix5: .compose() is partially unfinished.' );
+
+		var te = this.elements;
+
+		var sin = Math.sin;
+		var cos = Math.cos;
+
+		var yz = euler._yz, zx = euler._zx, xy = euler._xy,
+		    xw = euler._xw, yw = euler._yw, zw = euler._zw;
+
+		var syz = sin(yz), szx = sin(zx), sxy = sin(xy),
+			sxw = sin(xw), syw = sin(yw), szw = sin(zw);
+
+		var cyz = cos(yz), czx = cos(zx), cxy = cos(xy),
+			cxw = cos(xw), cyw = cos(yw), czw = cos(zw);
+
+		var sx = scale.x, sy = scale.y, sz = scale.z, sw = scale.w;
+
+		this.set(
+
+			sx, 0,  0,  0,  position.x,
+			0,  sy, 0,  0,  position.y,
+			0,  0,  sz, 0,  position.z,
+			0,  0,  0,  sw, position.w,
+			0,  0,  0,  0,  1
+
+		);
+
+		return this;
+
+	},
+
 	decompose: function ( position, quaternion, scale ) {
 		console.error( 'THREE.Matrix5: .decompose() is not done.' );
 
@@ -868,7 +949,6 @@ Object.assign( Matrix5.prototype, {
 		scale.y = sy;
 		scale.z = sz;
 
-		
 		return this;
 
 	},
@@ -893,7 +973,6 @@ Object.assign( Matrix5.prototype, {
 		te[ 3 ] = 0;	te[ 8 ] = 0;	te[ 13 ] = 0;	te[ 18 ] = 1;	te[ 23 ] = 0;
 		te[ 4 ] = 0;	te[ 9 ] = 0;	te[ 14 ] = 0;	te[ 19 ] = 0;	te[ 24 ] = 1;
 
-		
 		return this;
 
 	},
@@ -915,8 +994,6 @@ Object.assign( Matrix5.prototype, {
 		te[ 2 ] = 0;	te[ 6 ] = 0;	te[ 10 ] = - 2 * p;	te[ 14 ] = - z;
 		te[ 3 ] = 0;	te[ 7 ] = 0;	te[ 11 ] = 0;	te[ 15 ] = 1;
 
-		
-
 		return this;
 
 	},
@@ -933,8 +1010,6 @@ Object.assign( Matrix5.prototype, {
 
 		}
 
-		
-
 		return true;
 
 	},
@@ -949,8 +1024,6 @@ Object.assign( Matrix5.prototype, {
 			this.elements[ i ] = array[ i + offset ];
 
 		}
-
-		
 
 		return this;
 
