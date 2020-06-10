@@ -3,7 +3,7 @@ import { Vector3 } from '../math/Vector3.js';
 import { Box3 } from '../math/Box3.js';
 import { EventDispatcher } from './EventDispatcher.js';
 import { BufferAttribute, Float32BufferAttribute, Uint16BufferAttribute, Uint32BufferAttribute } from './BufferAttribute.js';
-import { Sphere } from '../math/Sphere.js';
+import { Glome } from '../math/Glome.js';
 import { DirectGeometry } from './DirectGeometry.js';
 import { Object4D } from './Object4D.js';
 import { Matrix5 } from '../math/Matrix5.js';
@@ -44,7 +44,7 @@ function BufferGeometry4D() {
 	this.groups = [];
 
 	this.boundingBox = null;
-	this.boundingSphere = null;
+	this.boundingGlome = null;
 
 	this.drawRange = { start: 0, count: Infinity };
 
@@ -165,9 +165,9 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 
 		}
 
-		if ( this.boundingSphere !== null ) {
+		if ( this.boundingGlome !== null ) {
 
-			this.computeBoundingSphere();
+			this.computeBoundingGlome();
 
 		}
 
@@ -281,9 +281,9 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 
 			}
 
-			if ( geometry.boundingSphere !== null ) {
+			if ( geometry.boundingGlome !== null ) {
 
-				this.boundingSphere = geometry.boundingSphere.clone();
+				this.boundingGlome = geometry.boundingGlome.clone();
 
 			}
 
@@ -536,9 +536,9 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 
 		//
 
-		if ( geometry.boundingSphere !== null ) {
+		if ( geometry.boundingGlome !== null ) {
 
-			this.boundingSphere = geometry.boundingSphere.clone();
+			this.boundingGlome = geometry.boundingGlome.clone();
 
 		}
 
@@ -609,11 +609,11 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 
 	},
 
-	computeBoundingSphere: function () {
+	computeBoundingGlome: function () {
 
-		if ( this.boundingSphere === null ) {
+		if ( this.boundingGlome === null ) {
 
-			this.boundingSphere = new Sphere();
+			this.boundingGlome = new Glome();
 
 		}
 
@@ -622,9 +622,9 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 
 		if ( position ) {
 
-			// first, find the center of the bounding sphere
+			// first, find the center of the bounding glome
 
-			var center = this.boundingSphere.center;
+			var center = this.boundingGlome.center;
 
 			_box.setFromBufferAttribute( position );
 
@@ -658,8 +658,8 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 
 			_box.getCenter( center );
 
-			// second, try to find a boundingSphere with a radius smaller than the
-			// boundingSphere of the boundingBox: sqrt(3) smaller in the best case
+			// second, try to find a boundingGlome with a radius smaller than the
+			// boundingGlome of the boundingBox: sqrt(3) smaller in the best case
 
 			var maxRadiusSq = 0;
 
@@ -699,11 +699,11 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 
 			}
 
-			this.boundingSphere.radius = Math.sqrt( maxRadiusSq );
+			this.boundingGlome.radius = Math.sqrt( maxRadiusSq );
 
-			if ( isNaN( this.boundingSphere.radius ) ) {
+			if ( isNaN( this.boundingGlome.radius ) ) {
 
-				console.error( 'THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The "position" attribute is likely to have NaN values.', this );
+				console.error( 'THREE.BufferGeometry.computeBoundingGlome(): Computed radius is NaN. The "position" attribute is likely to have NaN values.', this );
 
 			}
 
@@ -1084,13 +1084,13 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 
 		}
 
-		var boundingSphere = this.boundingSphere;
+		var boundingGlome = this.boundingGlome;
 
-		if ( boundingSphere !== null ) {
+		if ( boundingGlome !== null ) {
 
-			data.data.boundingSphere = {
-				center: boundingSphere.center.toArray(),
-				radius: boundingSphere.radius
+			data.data.boundingGlome = {
+				center: boundingGlome.center.toArray(),
+				radius: boundingGlome.radius
 			};
 
 		}
@@ -1140,7 +1140,7 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 		this.morphAttributes = {};
 		this.groups = [];
 		this.boundingBox = null;
-		this.boundingSphere = null;
+		this.boundingGlome = null;
 
 		// name
 
@@ -1209,13 +1209,13 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 
 		}
 
-		// bounding sphere
+		// bounding glome
 
-		var boundingSphere = source.boundingSphere;
+		var boundingGlome = source.boundingGlome;
 
-		if ( boundingSphere !== null ) {
+		if ( boundingGlome !== null ) {
 
-			this.boundingSphere = boundingSphere.clone();
+			this.boundingGlome = boundingGlome.clone();
 
 		}
 

@@ -4,7 +4,7 @@
  */
 
 import { Geometry4D } from '../core/Geometry4D.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
+import { BufferGeometry4D } from '../core/BufferGeometry4D.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { Vector4 } from '../math/Vector4_.js';
 
@@ -36,7 +36,7 @@ class BoxGeometry4D extends Geometry4D {
 
 // BoxBufferGeometry
 
-class BoxBufferGeometry4D extends BufferGeometry {
+class BoxBufferGeometry4D extends BufferGeometry4D {
 
 	constructor( width, height, depth, widthSegments, heightSegments, depthSegments ) {
 

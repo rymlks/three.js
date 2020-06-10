@@ -1,7 +1,7 @@
 import { EventDispatcher } from './EventDispatcher.js';
 import { Face4 } from './Face4.js';
 import { Matrix3 } from '../math/Matrix3.js';
-import { Sphere } from '../math/Sphere.js';
+import { Glome } from '../math/Glome.js';
 import { Box3 } from '../math/Box3.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Vector4 } from '../math/Vector4.js';
@@ -48,7 +48,7 @@ function Geometry4D() {
 	this.lineDistances = [];
 
 	this.boundingBox = null;
-	this.boundingSphere = null;
+	this.boundingGlome = null;
 
 	// update flags
 
@@ -98,9 +98,9 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 		}
 
-		if ( this.boundingSphere !== null ) {
+		if ( this.boundingGlome !== null ) {
 
-			this.computeBoundingSphere();
+			this.computeBoundingGlome();
 
 		}
 
@@ -313,9 +313,9 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 		}
 
-		if ( geometry.boundingSphere !== null ) {
+		if ( geometry.boundingGlome !== null ) {
 
-			this.boundingSphere = geometry.boundingSphere.clone();
+			this.boundingGlome = geometry.boundingGlome.clone();
 
 		}
 
@@ -337,28 +337,30 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 	normalize: function () {
 
-		this.computeBoundingSphere();
+		this.computeBoundingGlome();
 
-		var center = this.boundingSphere.center;
-		var radius = this.boundingSphere.radius;
+		var center = this.boundingGlome.center;
+		var radius = this.boundingGlome.radius;
 
 		var s = radius === 0 ? 1 : 1.0 / radius;
 
-		var matrix = new Matrix4();
+		var matrix = new Matrix5();
 		matrix.set(
-			s, 0, 0, - s * center.x,
-			0, s, 0, - s * center.y,
-			0, 0, s, - s * center.z,
-			0, 0, 0, 1
+			s, 0, 0, 0, - s * center.x,
+			0, s, 0, 0, - s * center.y,
+			0, 0, s, 0, - s * center.z,
+			0, 0, 0, s, - s * center.w,
+			0, 0, 0, 0, 1
 		);
 
-		this.applyMatrix4( matrix );
+		this.applyMatrix5( matrix );
 
 		return this;
 
 	},
 
 	computeFaceNormals: function () {
+		console.error("THREE.Geometry4D: .computeFaceNormals() is not done");
 
 		var cb = new Vector3(), ab = new Vector3();
 
@@ -385,6 +387,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 	},
 
 	computeVertexNormals: function ( areaWeighted ) {
+		console.error("THREE.Geometry4D: .computeVertexNormals() is not done");
 
 		if ( areaWeighted === undefined ) areaWeighted = true;
 
@@ -479,6 +482,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 	},
 
 	computeFlatVertexNormals: function () {
+		console.error("THREE.Geometry4D: .computeFlatVertexNormals() is not done");
 
 		var f, fl, face;
 
@@ -515,6 +519,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 	},
 
 	computeMorphNormals: function () {
+		console.error("THREE.Geometry4D: .computeMorphNormals() is not done");
 
 		var i, il, f, fl, face;
 
@@ -632,6 +637,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 	},
 
 	computeBoundingBox: function () {
+		console.error("THREE.Geometry4D: .computeBoundingBox() is not done");
 
 		if ( this.boundingBox === null ) {
 
@@ -643,23 +649,24 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 	},
 
-	computeBoundingSphere: function () {
+	computeBoundingGlome: function () {
 
-		if ( this.boundingSphere === null ) {
+		if ( this.boundingGlome === null ) {
 
-			this.boundingSphere = new Sphere();
+			this.boundingGlome = new Glome();
 
 		}
 
-		this.boundingSphere.setFromPoints( this.vertices );
+		this.boundingGlome.setFromPoints( this.vertices );
 
 	},
 
 	merge: function ( geometry, matrix, materialIndexOffset ) {
+		console.error("THREE.Geometry4D: .merge() is not done");
 
 		if ( ! ( geometry && geometry.isGeometry ) ) {
 
-			console.error( 'THREE.Geometry.merge(): geometry not an instance of THREE.Geometry.', geometry );
+			console.error( 'THREE.Geometry4D.merge(): geometry not an instance of THREE.Geometry4D.', geometry );
 			return;
 
 		}
@@ -776,6 +783,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 	},
 
 	mergeMesh: function ( mesh ) {
+		console.error("THREE.Geometry4D: .mergeMesh() is not done");
 
 		if ( ! ( mesh && mesh.isMesh ) ) {
 
@@ -797,6 +805,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 	 */
 
 	mergeVertices: function () {
+		console.error("THREE.Geometry4D: .mergeVertices() is not done");
 
 		var verticesMap = {}; // Hashmap for looking up vertices by position coordinates (and making sure they are unique)
 		var unique = [], changes = [];
@@ -886,7 +895,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 		for ( var i = 0, l = points.length; i < l; i ++ ) {
 
 			var point = points[ i ];
-			this.vertices.push( new Vector3( point.x, point.y, point.z || 0 ) );
+			this.vertices.push( new Vector4( point.x, point.y, point.z, point.w || 0 ) );
 
 		}
 
@@ -895,6 +904,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 	},
 
 	sortFacesByMaterialIndex: function () {
+		console.error("THREE.Geometry4D: .sortFacesByMaterialIndex() is not done");
 
 		var faces = this.faces;
 		var length = faces.length;
@@ -1180,7 +1190,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 		this.skinIndices = [];
 		this.lineDistances = [];
 		this.boundingBox = null;
-		this.boundingSphere = null;
+		this.boundingGlome = null;
 
 		// name
 
@@ -1374,13 +1384,13 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 		}
 
-		// bounding sphere
+		// bounding glome
 
-		var boundingSphere = source.boundingSphere;
+		var boundingGlome = source.boundingGlome;
 
-		if ( boundingSphere !== null ) {
+		if ( boundingGlome !== null ) {
 
-			this.boundingSphere = boundingSphere.clone();
+			this.boundingGlome = boundingGlome.clone();
 
 		}
 

@@ -1,6 +1,6 @@
 import { Vector3 } from '../math/Vector3.js';
 import { Vector2 } from '../math/Vector2.js';
-import { Sphere } from '../math/Sphere.js';
+import { Glome } from '../math/Glome.js';
 import { Ray } from '../math/Ray.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Object3D } from '../core/Object3D.js';
@@ -20,7 +20,7 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 
 var _inverseMatrix = new Matrix4();
 var _ray = new Ray();
-var _sphere = new Sphere();
+var _glome = new Glome();
 
 var _vA = new Vector3();
 var _vB = new Vector3();
@@ -136,14 +136,14 @@ Mesh4D.prototype = Object.assign( Object.create( Object4D.prototype ), {
 
 		if ( material === undefined ) return;
 
-		// Checking boundingSphere distance to ray
+		// Checking boundingGlome distance to ray
 
-		if ( geometry.boundingSphere === null ) geometry.computeBoundingSphere();
+		if ( geometry.boundingGlome === null ) geometry.computeBoundingGlome();
 
-		_sphere.copy( geometry.boundingSphere );
-		_sphere.applyMatrix4( matrixWorld );
+		_glome.copy( geometry.boundingGlome );
+		_glome.applyMatrix4( matrixWorld );
 
-		if ( raycaster.ray.intersectsSphere( _sphere ) === false ) return;
+		if ( raycaster.ray.intersectsGlome( _glome ) === false ) return;
 
 		//
 

@@ -17,7 +17,7 @@ import {
 } from '../constants.js';
 import { MathUtils } from '../math/MathUtils.js';
 import { DataTexture } from '../textures/DataTexture.js';
-import { Frustum } from '../math/Frustum.js';
+import { Frustum4D } from '../math/Frustum4D.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Matrix5 } from '../math/Matrix5.js';
 import { UniformsLib } from './shaders/UniformsLib.js';
@@ -165,7 +165,7 @@ function WebGLRenderer( parameters ) {
 
 		// frustum
 
-		_frustum = new Frustum(),
+		_frustum = new Frustum4D(),
 
 		// clipping
 

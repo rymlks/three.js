@@ -1,5 +1,5 @@
-import { Vector3 } from './Vector3.js';
-import { Sphere } from './Sphere.js';
+import { Vector4 } from './Vector4.js';
+import { Glome } from './Glome.js';
 import { Plane } from './Plane.js';
 
 /**
@@ -8,10 +8,10 @@ import { Plane } from './Plane.js';
  * @author bhouston / http://clara.io
  */
 
-var _sphere = new Sphere();
-var _vector = new Vector3();
+var _glome = new Glome();
+var _vector = new Vector4();
 
-function Frustum( p0, p1, p2, p3, p4, p5 ) {
+function Frustum4D( p0, p1, p2, p3, p4, p5 ) {
 
 	this.planes = [
 
@@ -26,7 +26,7 @@ function Frustum( p0, p1, p2, p3, p4, p5 ) {
 
 }
 
-Object.assign( Frustum.prototype, {
+Object.assign( Frustum4D.prototype, {
 
 	set: function ( p0, p1, p2, p3, p4, p5 ) {
 
@@ -64,13 +64,14 @@ Object.assign( Frustum.prototype, {
 	},
 
 	setFromProjectionMatrix: function ( m ) {
+		console.error("THREE.Frustum4D: .setFromProjectionMatrix() is pretty fuckin gross");
 
 		var planes = this.planes;
 		var me = m.elements;
 		var me0 = me[ 0 ], me1 = me[ 1 ], me2 = me[ 2 ], me3 = me[ 3 ];
-		var me4 = me[ 4 ], me5 = me[ 5 ], me6 = me[ 6 ], me7 = me[ 7 ];
-		var me8 = me[ 8 ], me9 = me[ 9 ], me10 = me[ 10 ], me11 = me[ 11 ];
-		var me12 = me[ 12 ], me13 = me[ 13 ], me14 = me[ 14 ], me15 = me[ 15 ];
+		var me4 = me[ 5 ], me5 = me[ 6 ], me6 = me[ 7 ], me7 = me[ 8 ];
+		var me8 = me[ 10 ], me9 = me[ 11 ], me10 = me[ 12 ], me11 = me[ 13 ];
+		var me12 = me[ 15 ], me13 = me[ 16 ], me14 = me[ 17 ], me15 = me[ 18 ];
 
 		planes[ 0 ].setComponents( me3 - me0, me7 - me4, me11 - me8, me15 - me12 ).normalize();
 		planes[ 1 ].setComponents( me3 + me0, me7 + me4, me11 + me8, me15 + me12 ).normalize();
@@ -87,11 +88,11 @@ Object.assign( Frustum.prototype, {
 
 		var geometry = object.geometry;
 
-		if ( geometry.boundingSphere === null ) geometry.computeBoundingSphere();
+		if ( geometry.boundingGlome === null ) geometry.computeBoundingGlome();
 
-		_sphere.copy( geometry.boundingSphere ).applyMatrix4( object.matrixWorld );
+		_glome.copy( geometry.boundingGlome ).applyMatrix5( object.matrixWorld );
 
-		return this.intersectsSphere( _sphere );
+		return this.intersectsGlome( _glome );
 
 	},
 
@@ -105,11 +106,11 @@ Object.assign( Frustum.prototype, {
 
 	},
 
-	intersectsSphere: function ( sphere ) {
+	intersectsGlome: function ( glome ) {
 
 		var planes = this.planes;
-		var center = sphere.center;
-		var negRadius = - sphere.radius;
+		var center = glome.center;
+		var negRadius = - glome.radius;
 
 		for ( var i = 0; i < 6; i ++ ) {
 
@@ -128,6 +129,7 @@ Object.assign( Frustum.prototype, {
 	},
 
 	intersectsBox: function ( box ) {
+		console.error("THREE.Frustum4D: .intersectsBox() is not done");
 
 		var planes = this.planes;
 
@@ -174,4 +176,4 @@ Object.assign( Frustum.prototype, {
 } );
 
 
-export { Frustum };
+export { Frustum4D };
