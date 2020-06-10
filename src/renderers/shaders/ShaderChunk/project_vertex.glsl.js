@@ -20,13 +20,13 @@ gl_Position = vec4(mvPosition3D.x, mvPosition3D.y, mvPosition3D.z, foo);
 //*/
 
 
-
 vec4 mvPosition3D = xyzw(mvPosition);
 if (abs(mvPosition3D.z) == mvPosition3D.z) {
 	mvPosition3D.z = sqrt(pow2(mvPosition3D.z) + pow2(mvPosition3D.w));
 } else {
 	mvPosition3D.z = -sqrt(pow2(mvPosition3D.z) + pow2(mvPosition3D.w));
 }
+//mvPosition3D.z += mvPosition3D.w;
 mvPosition3D.w = 1.0;
 gl_Position = projectionMatrix * mvPosition3D;
 //*/

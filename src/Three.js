@@ -134,6 +134,7 @@ export { Box2 } from './math/Box2.js';
 export { Line3 } from './math/Line3.js';
 export { Euler } from './math/Euler.js';
 export { Euler4D } from './math/Euler4D.js';
+export { Vector5 } from './math/Vector5.js';
 export { Vector4 } from './math/Vector4.js';
 export { Vector3 } from './math/Vector3.js';
 export { Vector2 } from './math/Vector2.js';

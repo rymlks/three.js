@@ -20,7 +20,7 @@ function Euler4D( yz, zx, xy, xw, yw, zw, order ) {
 	this._xw = xw || 0;
 	this._yw = yw || 0;
 	this._zw = zw || 0;
-	this._order = order || Euler.DefaultOrder;
+	this._order = order || Euler4D.DefaultOrder;
 
 }
 
@@ -163,7 +163,7 @@ Object.assign( Euler4D.prototype, {
 		this._xw = xw || 0;
 		this._yw = yw || 0;
 		this._zw = zw || 0;
-		this._order = order || Euler.DefaultOrder;
+		this._order = order || Euler4D.DefaultOrder;
 
 		this._onChangeCallback();
 

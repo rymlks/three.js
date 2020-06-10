@@ -1,5 +1,5 @@
 import { EventDispatcher } from '../core/EventDispatcher.js';
-import { NoColors, FrontSide, FlatShading, NormalBlending, LessEqualDepth, AddEquation, OneMinusSrcAlphaFactor, SrcAlphaFactor, AlwaysStencilFunc, KeepStencilOp } from '../constants.js';
+import { NoColors, FrontSide, DoubleSide, FlatShading, NormalBlending, LessEqualDepth, AddEquation, OneMinusSrcAlphaFactor, SrcAlphaFactor, AlwaysStencilFunc, KeepStencilOp } from '../constants.js';
 import { MathUtils } from '../math/MathUtils.js';
 
 /**

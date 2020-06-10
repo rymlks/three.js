@@ -1,10 +1,10 @@
 import { Quaternion } from '../math/Quaternion.js';
 import { Vector3 } from '../math/Vector3.js';
-import { Vector4 } from '../math/Vector4_.js';
+import { Vector4 } from '../math/Vector4.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Matrix5 } from '../math/Matrix5.js';
 import { EventDispatcher } from './EventDispatcher.js';
-import { Euler } from '../math/Euler.js';
+import { Euler4D } from '../math/Euler4D.js';
 import { Layers } from './Layers.js';
 import { Matrix3 } from '../math/Matrix3.js';
 import { MathUtils } from '../math/MathUtils.js';
@@ -51,19 +51,19 @@ function Object4D() {
 	this.up = Object4D.DefaultUp.clone();
 
 	var position = new Vector4();
-	var rotation = new Euler();
+	var rotation = new Euler4D();
 	var quaternion = new Quaternion();
 	var scale = new Vector4( 1, 1, 1, 1 );
 
 	function onRotationChange() {
 
-		quaternion.setFromEuler( rotation, false );
+		//quaternion.setFromEuler( rotation, false );
 
 	}
 
 	function onQuaternionChange() {
 
-		rotation.setFromQuaternion( quaternion, undefined, false );
+		//rotation.setFromQuaternion( quaternion, undefined, false );
 
 	}
 
@@ -554,7 +554,7 @@ Object4D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 	updateMatrix: function () {
 
-		this.matrix.compose( this.position, this.quaternion, this.scale );
+		this.matrix.composeEuler( this.position, this.rotation, this.scale );
 
 		this.matrixWorldNeedsUpdate = true;
 

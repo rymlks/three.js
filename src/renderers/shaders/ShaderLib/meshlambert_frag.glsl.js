@@ -78,7 +78,7 @@ void main() {
 
 	#endif
 
-	//reflectedLight.directDiffuse *= BRDF_Diffuse_Lambert( diffuseColor.rgb ) * getShadowMask();
+	reflectedLight.directDiffuse *= BRDF_Diffuse_Lambert( diffuseColor.rgb ) * getShadowMask();
 
 	// modulation
 	#include <aomap_fragment>

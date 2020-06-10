@@ -1,5 +1,6 @@
 import { Vector3 } from './Vector3.js';
 import { Vector4 } from './Vector4_.js';
+import { Vector5 } from '../math/Vector5.js';
 import { Matrix4 } from './Matrix4.js';
 
 var _v1 = new Vector4();
@@ -454,6 +455,20 @@ Object.assign( Matrix5.prototype, {
 
 	},
 
+	multiplyVector: function ( v ) {
+
+		var te = this.elements;
+
+		var x = v.x*te[0] + v.y*te[5] + v.z*te[10] + v.w*te[15] + v.v*te[20];
+		var y = v.x*te[1] + v.y*te[6] + v.z*te[11] + v.w*te[16] + v.v*te[21];
+		var z = v.x*te[2] + v.y*te[7] + v.z*te[12] + v.w*te[17] + v.v*te[22];
+		var w = v.x*te[3] + v.y*te[8] + v.z*te[13] + v.w*te[18] + v.v*te[23];
+		var v = v.x*te[4] + v.y*te[9] + v.z*te[14] + v.w*te[19] + v.v*te[24];
+		
+		return new Vector5(x, y, z, w, v);
+
+	},
+
 	multiplyScalar: function ( s ) {
 
 		var te = this.elements;
@@ -884,24 +899,36 @@ Object.assign( Matrix5.prototype, {
 
 		var yz = euler._yz, zx = euler._zx, xy = euler._xy,
 		    xw = euler._xw, yw = euler._yw, zw = euler._zw;
-
+		/*
 		var syz = sin(yz), szx = sin(zx), sxy = sin(xy),
 			sxw = sin(xw), syw = sin(yw), szw = sin(zw);
 
 		var cyz = cos(yz), czx = cos(zx), cxy = cos(xy),
 			cxw = cos(xw), cyw = cos(yw), czw = cos(zw);
+		*/
+
+		var r1 = new Matrix5().makeRotationYZ(yz);
+		var r2 = new Matrix5().makeRotationZX(zx);
+		var r3 = new Matrix5().makeRotationXY(xy);
+		var r4 = new Matrix5().makeRotationXW(xw);
+		var r5 = new Matrix5().makeRotationYW(yw);
+		var r6 = new Matrix5().makeRotationZW(zw);
+
+		var rotationMat = r6.multiply(r5.multiply(r4.multiply(r3.multiply(r2.multiply(r1)))));
 
 		var sx = scale.x, sy = scale.y, sz = scale.z, sw = scale.w;
 
-		this.set(
+		var scaleMat = new Matrix5().makeScale(sx, sy, sz, sw);
 
-			sx, 0,  0,  0,  position.x,
-			0,  sy, 0,  0,  position.y,
-			0,  0,  sz, 0,  position.z,
-			0,  0,  0,  sw, position.w,
-			0,  0,  0,  0,  1
+		var translationMat = new Matrix5().makeTranslation(position.x, position.y, position.z, position.w);
 
-		);
+		var finalMat = translationMat.multiply(scaleMat.multiply(rotationMat));
+
+		for (var i=0; i< finalMat.elements.length; i++) {
+			te[i] = finalMat.elements[i];
+		}
+
+		var foo = new Vector5(0.5, 0.5, 0.5, 0.5, 1).applyMatrix5(this);
 
 		return this;
 
