@@ -6,6 +6,7 @@ import { Color } from '../../math/Color.js';
 import { Matrix4 } from '../../math/Matrix4.js';
 import { Vector2 } from '../../math/Vector2.js';
 import { Vector3 } from '../../math/Vector3.js';
+import { Vector4 } from '../../math/Vector4.js';
 
 function UniformsCache() {
 
@@ -37,6 +38,18 @@ function UniformsCache() {
 					};
 					break;
 
+				case 'DirectionalLight4D':
+					uniforms = {
+						direction: new Vector4(),
+						color: new Color(),
+
+						shadow: false,
+						shadowBias: 0,
+						shadowRadius: 1,
+						shadowMapSize: new Vector2()
+					};
+					break;
+
 				case 'SpotLight':
 					uniforms = {
 						position: new Vector3(),
@@ -54,9 +67,42 @@ function UniformsCache() {
 					};
 					break;
 
+				case 'SpotLight4D':
+					uniforms = {
+						position: new Vector4(),
+						direction: new Vector4(),
+						color: new Color(),
+						distance: 0,
+						coneCos: 0,
+						penumbraCos: 0,
+						decay: 0,
+
+						shadow: false,
+						shadowBias: 0,
+						shadowRadius: 1,
+						shadowMapSize: new Vector2()
+					};
+					break;
+
 				case 'PointLight':
 					uniforms = {
 						position: new Vector3(),
+						color: new Color(),
+						distance: 0,
+						decay: 0,
+
+						shadow: false,
+						shadowBias: 0,
+						shadowRadius: 1,
+						shadowMapSize: new Vector2(),
+						shadowCameraNear: 1,
+						shadowCameraFar: 1000
+					};
+					break;
+
+				case 'PointLight4D':
+					uniforms = {
+						position: new Vector4(),
 						color: new Color(),
 						distance: 0,
 						decay: 0,
@@ -150,7 +196,7 @@ function WebGLLights() {
 
 	for ( var i = 0; i < 9; i ++ ) state.probe.push( new Vector3() );
 
-	var vector3 = new Vector3();
+	var vector4 = new Vector4();
 	var matrix4 = new Matrix4();
 	var matrix42 = new Matrix4();
 
@@ -204,8 +250,8 @@ function WebGLLights() {
 
 				uniforms.color.copy( light.color ).multiplyScalar( light.intensity );
 				uniforms.direction.setFromMatrixPosition( light.matrixWorld );
-				vector3.setFromMatrixPosition( light.target.matrixWorld );
-				uniforms.direction.sub( vector3 );
+				vector4.setFromMatrixPosition( light.target.matrixWorld );
+				uniforms.direction.sub( vector4 );
 				uniforms.direction.transformDirection( viewMatrix );
 
 				uniforms.shadow = light.castShadow;
@@ -240,8 +286,8 @@ function WebGLLights() {
 				uniforms.distance = distance;
 
 				uniforms.direction.setFromMatrixPosition( light.matrixWorld );
-				vector3.setFromMatrixPosition( light.target.matrixWorld );
-				uniforms.direction.sub( vector3 );
+				vector4.setFromMatrixPosition( light.target.matrixWorld );
+				uniforms.direction.sub( vector4 );
 				uniforms.direction.transformDirection( viewMatrix );
 
 				uniforms.coneCos = Math.cos( light.angle );
@@ -306,7 +352,7 @@ function WebGLLights() {
 				var uniforms = cache.get( light );
 
 				uniforms.position.setFromMatrixPosition( light.matrixWorld );
-				uniforms.position.applyMatrix4( viewMatrix );
+				uniforms.position.applyMatrix5( viewMatrix );
 
 				uniforms.color.copy( light.color ).multiplyScalar( light.intensity );
 				uniforms.distance = light.distance;

@@ -125,16 +125,17 @@ float D_GGX( const in float alpha, const in float dotNH ) {
 }
 
 // GGX Distribution, Schlick Fresnel, GGX-Smith Visibility
-vec3 BRDF_Specular_GGX( const in IncidentLight incidentLight, const in vec3 viewDir, const in vec3 normal, const in vec3 specularColor, const in float roughness ) {
+vec3 BRDF_Specular_GGX( const in IncidentLight incidentLight, const in vec4 viewDir, const in vec4 normal, const in vec3 specularColor, const in float roughness ) {
 
 	float alpha = pow2( roughness ); // UE4's roughness
 
-	vec3 halfDir = normalize( incidentLight.direction + viewDir );
+	// XXX NOT 4D
+	vec3 halfDir = normalize( incidentLight.direction + viewDir ).xyz;
 
-	float dotNL = saturate( dot( normal, incidentLight.direction ) );
-	float dotNV = saturate( dot( normal, viewDir ) );
-	float dotNH = saturate( dot( normal, halfDir ) );
-	float dotLH = saturate( dot( incidentLight.direction, halfDir ) );
+	float dotNL = saturate( dot( normal.xyz, incidentLight.direction.xyz ) );
+	float dotNV = saturate( dot( normal.xyz, viewDir.xyz ) );
+	float dotNH = saturate( dot( normal.xyz, halfDir.xyz ) );
+	float dotLH = saturate( dot( incidentLight.direction.xyz, halfDir ) );
 
 	vec3 F = F_Schlick( specularColor, dotLH );
 
@@ -142,7 +143,10 @@ vec3 BRDF_Specular_GGX( const in IncidentLight incidentLight, const in vec3 view
 
 	float D = D_GGX( alpha, dotNH );
 
-	return F * ( G * D );
+	vec3 ret = F * ( G * D );
+
+	//return vec4(ret.x, ret.y, ret.z, 1.0);
+	return ret;
 
 } // validated
 
@@ -311,12 +315,14 @@ float D_BlinnPhong( const in float shininess, const in float dotNH ) {
 
 vec3 BRDF_Specular_BlinnPhong( const in IncidentLight incidentLight, const in GeometricContext geometry, const in vec3 specularColor, const in float shininess ) {
 
-	vec3 halfDir = normalize( incidentLight.direction + geometry.viewDir );
+	vec4 halfDir = normalize( incidentLight.direction + geometry.viewDir );
+
+	// XXX NOT 4D
 
 	//float dotNL = saturate( dot( geometry.normal, incidentLight.direction ) );
 	//float dotNV = saturate( dot( geometry.normal, geometry.viewDir ) );
-	float dotNH = saturate( dot( geometry.normal, halfDir ) );
-	float dotLH = saturate( dot( incidentLight.direction, halfDir ) );
+	float dotNH = saturate( dot( geometry.normal.xyz, halfDir.xyz ) );
+	float dotLH = saturate( dot( incidentLight.direction.xyz, halfDir.xyz ) );
 
 	vec3 F = F_Schlick( specularColor, dotLH );
 
@@ -324,7 +330,10 @@ vec3 BRDF_Specular_BlinnPhong( const in IncidentLight incidentLight, const in Ge
 
 	float D = D_BlinnPhong( shininess, dotNH );
 
-	return F * ( G * D );
+	vec3 ret = F * ( G * D );
+
+	//return vec4(ret.x, ret.y, ret.z, 1.0);
+	return ret;
 
 } // validated
 

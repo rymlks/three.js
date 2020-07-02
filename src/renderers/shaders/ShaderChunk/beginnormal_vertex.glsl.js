@@ -1,9 +1,9 @@
 export default /* glsl */`
-vec3 objectNormal = vec3( normal );
+vec4 objectNormal = vec4( normal );
 
 #ifdef USE_TANGENT
 
-	vec3 objectTangent = vec3( tangent.xyz );
+	vec4 objectTangent = vec4( xyzw( tangent ) );
 
 #endif
 `;

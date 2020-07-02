@@ -5,11 +5,11 @@ uniform vec3 lightProbe[ 9 ];
 
 // get the irradiance (radiance convolved with cosine lobe) at the point 'normal' on the unit sphere
 // source: https://graphics.stanford.edu/papers/envmap/envmap.pdf
-vec3 shGetIrradianceAt( in vec3 normal, in vec3 shCoefficients[ 9 ] ) {
+vec3 shGetIrradianceAt( in vec4 normal, in vec3 shCoefficients[ 9 ] ) {
 
 	// normal is assumed to have unit length
 
-	float x = normal.x, y = normal.y, z = normal.z;
+	float x = normal.x, y = normal.y, z = normal.z, w = normal.w;
 
 	// band 0
 	vec3 result = shCoefficients[ 0 ] * 0.886227;
@@ -32,7 +32,7 @@ vec3 shGetIrradianceAt( in vec3 normal, in vec3 shCoefficients[ 9 ] ) {
 
 vec3 getLightProbeIrradiance( const in vec3 lightProbe[ 9 ], const in GeometricContext geometry ) {
 
-	vec3 worldNormal = inverseTransformDirection( geometry.normal, viewMatrix );
+	vec4 worldNormal = inverseTransformDirection( geometry.normal, viewMatrix );
 
 	vec3 irradiance = shGetIrradianceAt( worldNormal, lightProbe );
 
@@ -57,7 +57,7 @@ vec3 getAmbientLightIrradiance( const in vec3 ambientLightColor ) {
 #if NUM_DIR_LIGHTS > 0
 
 	struct DirectionalLight {
-		vec3 direction;
+		vec4 direction;
 		vec3 color;
 
 		int shadow;
@@ -82,7 +82,7 @@ vec3 getAmbientLightIrradiance( const in vec3 ambientLightColor ) {
 #if NUM_POINT_LIGHTS > 0
 
 	struct PointLight {
-		vec3 position;
+		vec4 position;
 		vec3 color;
 		float distance;
 		float decay;
@@ -100,7 +100,7 @@ vec3 getAmbientLightIrradiance( const in vec3 ambientLightColor ) {
 	// directLight is an out parameter as having it as a return value caused compiler errors on some devices
 	void getPointDirectLightIrradiance( const in PointLight pointLight, const in GeometricContext geometry, out IncidentLight directLight ) {
 
-		vec3 lVector = pointLight.position - geometry.position;
+		vec4 lVector = pointLight.position - geometry.position;
 		directLight.direction = normalize( lVector );
 
 		float lightDistance = length( lVector );

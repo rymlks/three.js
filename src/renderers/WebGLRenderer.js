@@ -17,12 +17,14 @@ import {
 } from '../constants.js';
 import { MathUtils } from '../math/MathUtils.js';
 import { DataTexture } from '../textures/DataTexture.js';
-import { Frustum } from '../math/Frustum.js';
+import { Frustum4D } from '../math/Frustum4D.js';
 import { Matrix4 } from '../math/Matrix4.js';
+import { Matrix5 } from '../math/Matrix5.js';
 import { UniformsLib } from './shaders/UniformsLib.js';
 import { Vector2 } from '../math/Vector2.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Vector4 } from '../math/Vector4.js';
+import { Vector5 } from '../math/Vector5.js';
 import { Scene } from '../scenes/Scene.js';
 import { WebGLAnimation } from './webgl/WebGLAnimation.js';
 import { WebGLAttributes } from './webgl/WebGLAttributes.js';
@@ -163,7 +165,7 @@ function WebGLRenderer( parameters ) {
 
 		// frustum
 
-		_frustum = new Frustum(),
+		_frustum = new Frustum4D(),
 
 		// clipping
 
@@ -173,9 +175,9 @@ function WebGLRenderer( parameters ) {
 
 		// camera matrices cache
 
-		_projScreenMatrix = new Matrix4(),
+		_projScreenMatrix = new Matrix5(),
 
-		_vector3 = new Vector3();
+		_vector4 = new Vector4();
 
 	function getTargetPixelRatio() {
 
@@ -724,7 +726,9 @@ function WebGLRenderer( parameters ) {
 
 		if ( scene === null ) scene = tempScene; // renderBufferDirect second parameter used to be fog (could be null)
 
-		var frontFaceCW = ( object.isMesh && object.matrixWorld.determinant() < 0 );
+		var det = object.matrixWorld.determinant();
+
+		var frontFaceCW = ( object.isMesh && det < 0 );
 
 		var program = setProgram( camera, scene, material, object );
 
@@ -1170,7 +1174,7 @@ function WebGLRenderer( parameters ) {
 
 		scene.onBeforeRender( _this, scene, camera, renderTarget || _currentRenderTarget );
 
-		_projScreenMatrix.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
+		_projScreenMatrix.multiplyMatrices( camera.projectionMatrix4D, camera.matrixWorldInverse );
 		_frustum.setFromProjectionMatrix( _projScreenMatrix );
 
 		_localClippingEnabled = this.localClippingEnabled;
@@ -1318,7 +1322,7 @@ function WebGLRenderer( parameters ) {
 
 					if ( sortObjects ) {
 
-						_vector3.setFromMatrixPosition( object.matrixWorld )
+						_vector4.setFromMatrixPosition( object.matrixWorld )
 							.applyMatrix4( _projScreenMatrix );
 
 					}
@@ -1328,7 +1332,7 @@ function WebGLRenderer( parameters ) {
 
 					if ( material.visible ) {
 
-						currentRenderList.push( object, geometry, material, groupOrder, _vector3.z, null );
+						currentRenderList.push( object, geometry, material, groupOrder, _vector4.w, null );
 
 					}
 
@@ -1338,12 +1342,12 @@ function WebGLRenderer( parameters ) {
 
 				if ( sortObjects ) {
 
-					_vector3.setFromMatrixPosition( object.matrixWorld )
+					_vector4.setFromMatrixPosition( object.matrixWorld )
 						.applyMatrix4( _projScreenMatrix );
 
 				}
 
-				currentRenderList.push( object, null, object.material, groupOrder, _vector3.z, null );
+				currentRenderList.push( object, null, object.material, groupOrder, _vector4.w, null );
 
 			} else if ( object.isMesh || object.isLine || object.isPoints ) {
 
@@ -1364,7 +1368,7 @@ function WebGLRenderer( parameters ) {
 
 					if ( sortObjects ) {
 
-						_vector3.setFromMatrixPosition( object.matrixWorld )
+						_vector4.setFromMatrixPosition( object.matrixWorld )
 							.applyMatrix4( _projScreenMatrix );
 
 					}
@@ -1383,7 +1387,7 @@ function WebGLRenderer( parameters ) {
 
 							if ( groupMaterial && groupMaterial.visible ) {
 
-								currentRenderList.push( object, geometry, groupMaterial, groupOrder, _vector3.z, group );
+								currentRenderList.push( object, geometry, groupMaterial, groupOrder, _vector4.w, group );
 
 							}
 
@@ -1391,7 +1395,7 @@ function WebGLRenderer( parameters ) {
 
 					} else if ( material.visible ) {
 
-						currentRenderList.push( object, geometry, material, groupOrder, _vector3.z, null );
+						currentRenderList.push( object, geometry, material, groupOrder, _vector4.w, null );
 
 					}
 
@@ -1732,6 +1736,7 @@ function WebGLRenderer( parameters ) {
 			} else {
 
 				p_uniforms.setValue( _gl, 'projectionMatrix', camera.projectionMatrix );
+				p_uniforms.setValue( _gl, 'projectionMatrix4D', camera.projectionMatrix4D );
 
 			}
 
@@ -1769,7 +1774,7 @@ function WebGLRenderer( parameters ) {
 				if ( uCamPos !== undefined ) {
 
 					uCamPos.setValue( _gl,
-						_vector3.setFromMatrixPosition( camera.matrixWorld ) );
+						_vector4.setFromMatrixPosition( camera.matrixWorld ) );
 
 				}
 

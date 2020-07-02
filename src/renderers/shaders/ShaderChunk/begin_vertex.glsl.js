@@ -1,3 +1,3 @@
 export default /* glsl */`
-vec3 transformed = vec3( position );
+vec4 transformed = vec4( position );
 `;

@@ -2,9 +2,9 @@ export default /* glsl */`
 vec3 diffuse = vec3( 1.0 );
 
 GeometricContext geometry;
-geometry.position = mvPosition.xyz;
+geometry.position = xyzw(mvPosition);
 geometry.normal = normalize( transformedNormal );
-geometry.viewDir = ( isOrthographic ) ? vec3( 0, 0, 1 ) : normalize( -mvPosition.xyz );
+geometry.viewDir = ( isOrthographic ) ? vec4( 0, 0, 1, 0 ) : normalize( -xyzw(mvPosition) );
 
 GeometricContext backGeometry;
 backGeometry.position = geometry.position;

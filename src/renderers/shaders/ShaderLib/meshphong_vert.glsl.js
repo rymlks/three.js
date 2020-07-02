@@ -1,11 +1,11 @@
 export default /* glsl */`
 #define PHONG
 
-varying vec3 vViewPosition;
+varying vec4 vViewPosition;
 
 #ifndef FLAT_SHADED
 
-	varying vec3 vNormal;
+	varying vec4 vNormal;
 
 #endif
 
@@ -48,7 +48,7 @@ void main() {
 	#include <logdepthbuf_vertex>
 	#include <clipping_planes_vertex>
 
-	vViewPosition = - mvPosition.xyz;
+	vViewPosition = - xyzw(mvPosition);
 
 	#include <worldpos_vertex>
 	#include <envmap_vertex>

@@ -89,6 +89,9 @@ void main() {
 
 	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
 
+	// debug
+	//gl_FragColor = vec4( diffuseColor.rgb, 1.0 );
+
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>
 	#include <fog_fragment>

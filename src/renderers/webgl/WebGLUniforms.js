@@ -64,6 +64,7 @@ var arrayCacheI32 = [];
 
 // Float32Array caches used for uploading Matrix uniforms
 
+var mat5array = new Float32Array( 25 );
 var mat4array = new Float32Array( 16 );
 var mat3array = new Float32Array( 9 );
 var mat2array = new Float32Array( 4 );
@@ -737,6 +738,8 @@ StructuredUniform.prototype.setValue = function ( gl, value, textures ) {
 
 	var seq = this.seq;
 
+	if (value.isMatrix5) value.updateProperties();
+
 	for ( var i = 0, n = seq.length; i !== n; ++ i ) {
 
 		var u = seq[ i ];
@@ -762,13 +765,12 @@ var RePathPart = /([\w\d_]+)(\])?(\[|\.)?/g;
 // in the uniform names.
 
 function addUniform( container, uniformObject ) {
-
 	container.seq.push( uniformObject );
 	container.map[ uniformObject.id ] = uniformObject;
 
 }
 
-function parseUniform( activeInfo, addr, container ) {
+function parseUniform( activeInfo, addr, container ) {	
 
 	var path = activeInfo.name,
 		pathLength = path.length;

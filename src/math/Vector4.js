@@ -272,6 +272,22 @@ Object.assign( Vector4.prototype, {
 
 	},
 
+	applyMatrix5: function ( m ) {
+
+		var x = this.x, y = this.y, z = this.z, w = this.w;
+		var e = m.elements;
+
+		var v = 1 / ( e[ 4 ] * x + e[ 9 ] * y + e[ 14 ] * z + e[ 19 ] * w + e[24] );
+
+		this.x = (e[ 0 ] * x + e[ 5 ] * y + e[ 10 ] * z + e[ 15 ] * w + e[20]) * v;
+		this.y = (e[ 1 ] * x + e[ 6 ] * y + e[ 11 ] * z + e[ 16 ] * w + e[21]) * v;
+		this.z = (e[ 2 ] * x + e[ 7 ] * y + e[ 12 ] * z + e[ 17 ] * w + e[22]) * v;
+		this.w = (e[ 3 ] * x + e[ 8 ] * y + e[ 13 ] * z + e[ 18 ] * w + e[23]) * v;
+
+		return this;
+
+	},
+
 	divideScalar: function ( scalar ) {
 
 		return this.multiplyScalar( 1 / scalar );
@@ -598,6 +614,26 @@ Object.assign( Vector4.prototype, {
 
 	},
 
+	distanceTo: function ( v ) {
+
+		return Math.sqrt( this.distanceToSquared( v ) );
+
+	},
+
+	distanceToSquared: function ( v ) {
+
+		var dx = this.x - v.x, dy = this.y - v.y, dz = this.z - v.z, dw = this.w - v.w;
+
+		return dx * dx + dy * dy + dz * dz + dw * dw;
+
+	},
+
+	manhattanDistanceTo: function ( v ) {
+
+		return Math.abs( this.x - v.x ) + Math.abs( this.y - v.y ) + Math.abs( this.z - v.z ) + Math.abs( this.w - v.w );
+
+	},
+
 	equals: function ( v ) {
 
 		return ( ( v.x === this.x ) && ( v.y === this.y ) && ( v.z === this.z ) && ( v.w === this.w ) );
@@ -645,6 +681,36 @@ Object.assign( Vector4.prototype, {
 		this.w = attribute.getW( index );
 
 		return this;
+
+	},
+
+	setFromMatrixPosition: function ( m ) {
+
+		var e = m.elements;
+
+		this.x = e[ 20 ];
+		this.y = e[ 21 ];
+		this.z = e[ 22 ];
+		this.w = e[ 23 ];
+
+		return this;
+
+	},
+
+	transformDirection: function ( m ) {
+
+		// input: THREE.Matrix4 affine matrix
+		// vector interpreted as a direction
+
+		var x = this.x, y = this.y, z = this.z, w = this.w;
+		var e = m.elements;
+
+		this.x = e[ 0 ] * x + e[ 5 ] * y + e[ 10 ] * z + e[ 15 ] * w;
+		this.y = e[ 1 ] * x + e[ 6 ] * y + e[ 11 ] * z + e[ 16 ] * w;
+		this.z = e[ 2 ] * x + e[ 7 ] * y + e[ 12 ] * z + e[ 17 ] * w;
+		this.w = e[ 3 ] * x + e[ 8 ] * y + e[ 13 ] * z + e[ 18 ] * w;
+
+		return this.normalize();
 
 	}
 
