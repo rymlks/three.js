@@ -444,6 +444,7 @@ Object.assign( Matrix4.prototype, {
 		//TODO: make this more efficient
 		//( based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm )
 
+		/*
 		return (
 			n41 * (
 				+ n14 * n23 * n32
@@ -479,6 +480,42 @@ Object.assign( Matrix4.prototype, {
 			)
 
 		);
+		*/
+
+		var r1 = n41 * (
+			+ n14 * n23 * n32
+			 - n13 * n24 * n32
+			 - n14 * n22 * n33
+			 + n12 * n24 * n33
+			 + n13 * n22 * n34
+			 - n12 * n23 * n34
+		);
+		var r2 = n42 * (
+			+ n11 * n23 * n34
+			 - n11 * n24 * n33
+			 + n14 * n21 * n33
+			 - n13 * n21 * n34
+			 + n13 * n24 * n31
+			 - n14 * n23 * n31
+		);
+		var r3 = n43 * (
+			+ n11 * n24 * n32
+			 - n11 * n22 * n34
+			 - n14 * n21 * n32
+			 + n12 * n21 * n34
+			 + n14 * n22 * n31
+			 - n12 * n24 * n31
+		);
+		var r4 = n44 * (
+			- n13 * n22 * n31
+			 - n11 * n23 * n32
+			 + n11 * n22 * n33
+			 + n13 * n21 * n32
+			 - n12 * n21 * n33
+			 + n12 * n23 * n31
+		);
+
+		return r1 + r2 + r3 + r4;
 
 	},
 

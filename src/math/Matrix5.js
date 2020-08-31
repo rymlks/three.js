@@ -1,5 +1,5 @@
 import { Vector3 } from './Vector3.js';
-import { Vector4 } from './Vector4_.js';
+import { Vector4 } from './Vector4.js';
 import { Vector5 } from '../math/Vector5.js';
 import { Matrix4 } from './Matrix4.js';
 
@@ -202,18 +202,26 @@ Object.assign( Matrix5.prototype, {
 
 		if ( ! ( euler && euler.isEuler ) ) {
 
-			console.error( 'THREE.Matrix4: .makeRotationFromEuler() now expects a Euler rotation rather than a Vector3 and order.' );
+			console.error( 'THREE.Matrix5: .makeRotationFromEuler() now expects a Euler rotation rather than a Vector4 and order.' );
 
 		}
 
 		var te = this.elements;
+		var yz = euler.yz;
+		var zx = euler.zx;
+		var xy = euler.xy;
+		var xw = euler.xw;
+		var yw = euler.yw;
+		var zw = euler.zw;
 
-		var x = euler.x, y = euler.y, z = euler.z;
-		var a = Math.cos( x ), b = Math.sin( x );
-		var c = Math.cos( y ), d = Math.sin( y );
-		var e = Math.cos( z ), f = Math.sin( z );
+		var cyz = Math.cos( yz ), syz = Math.sin( yz );
+		var czx = Math.cos( zx ), szx = Math.sin( zx );
+		var cxy = Math.cos( xy ), sxy = Math.sin( xy );
+		var cxw = Math.cos( xw ), sxw = Math.sin( xw );
+		var cyw = Math.cos( yw ), syw = Math.sin( yw );
+		var czw = Math.cos( zw ), szw = Math.sin( zw );
 
-		if ( euler.order === 'XYZ' ) {
+		if ( euler.order === 'XYZW' ) {
 
 			var ae = a * e, af = a * f, be = b * e, bf = b * f;
 
@@ -229,85 +237,9 @@ Object.assign( Matrix5.prototype, {
 			te[ 6 ] = be + af * d;
 			te[ 10 ] = a * c;
 
-		} else if ( euler.order === 'YXZ' ) {
+		} else {
 
-			var ce = c * e, cf = c * f, de = d * e, df = d * f;
-
-			te[ 0 ] = ce + df * b;
-			te[ 4 ] = de * b - cf;
-			te[ 8 ] = a * d;
-
-			te[ 1 ] = a * f;
-			te[ 5 ] = a * e;
-			te[ 9 ] = - b;
-
-			te[ 2 ] = cf * b - de;
-			te[ 6 ] = df + ce * b;
-			te[ 10 ] = a * c;
-
-		} else if ( euler.order === 'ZXY' ) {
-
-			var ce = c * e, cf = c * f, de = d * e, df = d * f;
-
-			te[ 0 ] = ce - df * b;
-			te[ 4 ] = - a * f;
-			te[ 8 ] = de + cf * b;
-
-			te[ 1 ] = cf + de * b;
-			te[ 5 ] = a * e;
-			te[ 9 ] = df - ce * b;
-
-			te[ 2 ] = - a * d;
-			te[ 6 ] = b;
-			te[ 10 ] = a * c;
-
-		} else if ( euler.order === 'ZYX' ) {
-
-			var ae = a * e, af = a * f, be = b * e, bf = b * f;
-
-			te[ 0 ] = c * e;
-			te[ 4 ] = be * d - af;
-			te[ 8 ] = ae * d + bf;
-
-			te[ 1 ] = c * f;
-			te[ 5 ] = bf * d + ae;
-			te[ 9 ] = af * d - be;
-
-			te[ 2 ] = - d;
-			te[ 6 ] = b * c;
-			te[ 10 ] = a * c;
-
-		} else if ( euler.order === 'YZX' ) {
-
-			var ac = a * c, ad = a * d, bc = b * c, bd = b * d;
-
-			te[ 0 ] = c * e;
-			te[ 4 ] = bd - ac * f;
-			te[ 8 ] = bc * f + ad;
-
-			te[ 1 ] = f;
-			te[ 5 ] = a * e;
-			te[ 9 ] = - b * e;
-
-			te[ 2 ] = - d * e;
-			te[ 6 ] = ad * f + bc;
-			te[ 10 ] = ac - bd * f;
-
-		} else if ( euler.order === 'XZY' ) {
-
-			var ac = a * c, ad = a * d, bc = b * c, bd = b * d;
-
-			te[ 0 ] = c * e;
-			te[ 4 ] = - f;
-			te[ 8 ] = d * e;
-
-			te[ 1 ] = ac * f + bd;
-			te[ 5 ] = a * e;
-			te[ 9 ] = ad * f - bc;
-
-			te[ 2 ] = bc * f - ad;
-			te[ 6 ] = b * e;
-			te[ 10 ] = bd * f + ac;
+			console.warn( 'THREE.Matrix5: .makeRotationFromEuler() given unsupported order: ' + order );
 
 		}
 
@@ -404,6 +336,10 @@ Object.assign( Matrix5.prototype, {
 
 	multiplyMatrices: function ( a, b ) {
 
+		if (!a.isMatrix5 || !b.isMatrix5) {
+			throw "MUltiplying non-mat5 with mat5 mult"
+		}
+
 		var ae = a.elements;
 		var be = b.elements;
 		var te = this.elements;
@@ -497,7 +433,15 @@ Object.assign( Matrix5.prototype, {
 
 		//TODO: make this more efficient
 		//( based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm )
-
+		
+		var r1 = n51 * new Matrix4().set(n12, n22, n32, n42, n13, n23, n33, n43, n14, n24, n34, n44, n15, n25, n35, n45).determinant();
+		var r2 = n52 * new Matrix4().set(n11, n21, n31, n41, n13, n23, n33, n43, n14, n24, n34, n44, n15, n25, n35, n45).determinant();
+		var r3 = n53 * new Matrix4().set(n11, n21, n31, n41, n12, n22, n32, n42, n14, n24, n34, n44, n15, n25, n35, n45).determinant();
+		var r4 = n54 * new Matrix4().set(n11, n21, n31, n41, n12, n22, n32, n42, n13, n23, n33, n43, n15, n25, n35, n45).determinant();
+		var r5 = n55 * new Matrix4().set(n11, n21, n31, n41, n12, n22, n32, n42, n13, n23, n33, n43, n14, n24, n34, n44).determinant();
+		return r1 - r2 + r3 - r4 + r5;
+		
+		/*
 		return (
 			  n51 * new Matrix4().set(n12, n22, n32, n42, n13, n23, n33, n43, n14, n24, n34, n44, n15, n25, n35, n45).determinant()
 			- n52 * new Matrix4().set(n11, n21, n31, n41, n13, n23, n33, n43, n14, n24, n34, n44, n15, n25, n35, n45).determinant()
@@ -505,6 +449,7 @@ Object.assign( Matrix5.prototype, {
 			- n54 * new Matrix4().set(n11, n21, n31, n41, n12, n22, n32, n42, n13, n23, n33, n43, n15, n25, n35, n45).determinant()
 			+ n55 * new Matrix4().set(n11, n21, n31, n41, n12, n22, n32, n42, n13, n23, n33, n43, n14, n24, n34, n44).determinant()
 		);
+		*/
 
 	},
 
@@ -557,11 +502,11 @@ Object.assign( Matrix5.prototype, {
 		var te = this.elements,
 			me = m.elements;
 
-		var det = this.determinant();
+		var det = m.determinant();
 
-		if ( det === 0 ) {
+		if ( det < 1.0e-10 ) {
 
-			var msg = "THREE.Matrix5: .getInverse() can't invert matrix, determinant is 0";
+			var msg = "THREE.Matrix5: .getInverse() can't invert matrix, determinant is too small";
 
 			if ( throwOnDegenerate === true ) {
 
@@ -623,7 +568,7 @@ Object.assign( Matrix5.prototype, {
 		 										  tm31, -tm32,  tm33, -tm34,  tm35,
 												 -tm41,  tm42, -tm43,  tm44, -tm45,
 												  tm51, -tm52,  tm53, -tm54,  tm55,)
-		
+
 		for (var i=0; i<transpose_minors.elements.length; i++) {
 			te[i] = transpose_minors.elements[i] * detInv;
 		}
@@ -981,11 +926,11 @@ Object.assign( Matrix5.prototype, {
 	},
 
 	makePerspective: function ( left, right, top, bottom, near, far, nearw, farw ) {
-		console.error( 'THREE.Matrix5: .makePerspective() is not done.' );
+		//console.error( 'THREE.Matrix5: .makePerspective() is not done.' );
 
 		if ( far === undefined ) {
 
-			console.warn( 'THREE.Matrix4: .makePerspective() has been redefined and has a new signature. Please check the docs.' );
+			console.warn( 'THREE.Matrix5: .makePerspective() has been redefined and has a new signature. Please check the docs.' );
 
 		}
 
