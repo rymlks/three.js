@@ -21,7 +21,7 @@ function Material() {
 	this.fog = true;
 
 	this.blending = NormalBlending;
-	this.side = FrontSide;
+	this.side = DoubleSide; // was FrontSide
 	this.flatShading = false;
 	this.vertexTangents = false;
 	this.vertexColors = NoColors; // THREE.NoColors, THREE.VertexColors, THREE.FaceColors

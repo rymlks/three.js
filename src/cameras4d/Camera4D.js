@@ -64,7 +64,6 @@ Camera4D.prototype = Object.assign( Object.create( Object4D.prototype ), {
 	},
 
 	updateMatrixWorld: function ( force ) {
-
 		Object4D.prototype.updateMatrixWorld.call( this, force );
 
 		this.matrixWorldInverse.getInverse( this.matrixWorld );
@@ -77,6 +76,9 @@ Camera4D.prototype = Object.assign( Object.create( Object4D.prototype ), {
 
 		this.matrixWorldInverse.getInverse( this.matrixWorld );
 
+		if (isNaN(this.matrixWorldInverse.elements[0])) {
+			throw "Nan in matrix world inverse"
+		}
 	},
 
 	clone: function () {

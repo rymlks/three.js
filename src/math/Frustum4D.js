@@ -64,7 +64,7 @@ Object.assign( Frustum4D.prototype, {
 	},
 
 	setFromProjectionMatrix: function ( m ) {
-		console.error("THREE.Frustum4D: .setFromProjectionMatrix() is pretty fuckin gross");
+		//console.error("THREE.Frustum4D: .setFromProjectionMatrix() is pretty fuckin gross");
 
 		var planes = this.planes;
 		var me = m.elements;

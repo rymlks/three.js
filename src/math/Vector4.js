@@ -697,6 +697,12 @@ Object.assign( Vector4.prototype, {
 
 	},
 
+	setFromMatrixColumn: function ( m, index ) {
+
+		return this.fromArray( m.elements, index * 5 );
+
+	},
+
 	transformDirection: function ( m ) {
 
 		// input: THREE.Matrix4 affine matrix

@@ -1,6 +1,6 @@
 import { Vector4 } from '../math/Vector4.js';
 import { Vector3 } from '../math/Vector3.js';
-import { Box3 } from '../math/Box3.js';
+import { Box4 } from '../math/Box4.js';
 import { EventDispatcher } from './EventDispatcher.js';
 import { BufferAttribute, Float32BufferAttribute, Uint16BufferAttribute, Uint32BufferAttribute } from './BufferAttribute.js';
 import { Glome } from '../math/Glome.js';
@@ -22,8 +22,8 @@ var _bufferGeometryId = 1; // BufferGeometry uses odd numbers as Id
 var _m1 = new Matrix5();
 var _obj = new Object4D();
 var _offset = new Vector4();
-var _box = new Box3();
-var _boxMorphTargets = new Box3();
+var _box = new Box4();
+var _boxMorphTargets = new Box4();
 var _vector = new Vector4();
 
 function BufferGeometry4D() {
@@ -556,7 +556,7 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 
 		if ( this.boundingBox === null ) {
 
-			this.boundingBox = new Box3();
+			this.boundingBox = new Box4();
 
 		}
 
@@ -601,9 +601,9 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 
 		}
 
-		if ( isNaN( this.boundingBox.min.x ) || isNaN( this.boundingBox.min.y ) || isNaN( this.boundingBox.min.z ) ) {
+		if ( isNaN( this.boundingBox.min.x ) || isNaN( this.boundingBox.min.y ) || isNaN( this.boundingBox.min.z ) || isNaN( this.boundingBox.min.w ) ) {
 
-			console.error( 'THREE.BufferGeometry.computeBoundingBox: Computed min/max have NaN values. The "position" attribute is likely to have NaN values.', this );
+			console.error( 'THREE.BufferGeometry4D.computeBoundingBox: Computed min/max have NaN values. The "position" attribute is likely to have NaN values.', this );
 
 		}
 
@@ -703,7 +703,7 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 
 			if ( isNaN( this.boundingGlome.radius ) ) {
 
-				console.error( 'THREE.BufferGeometry.computeBoundingGlome(): Computed radius is NaN. The "position" attribute is likely to have NaN values.', this );
+				console.error( 'THREE.BufferGeometry4D.computeBoundingGlome(): Computed radius is NaN. The "position" attribute is likely to have NaN values.', this );
 
 			}
 
