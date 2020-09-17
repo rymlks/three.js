@@ -198,7 +198,7 @@ Object.assign( Matrix5.prototype, {
 	},
 
 	makeRotationFromEuler: function ( euler ) {
-		console.error( 'THREE.Matrix5: .makeRotationFromEuler() is not done.' );
+		//console.error( 'THREE.Matrix5: .makeRotationFromEuler() is not done.' );
 
 		if ( ! ( euler && euler.isEuler ) ) {
 
@@ -223,37 +223,152 @@ Object.assign( Matrix5.prototype, {
 
 		if ( euler.order === 'XYZW' ) {
 
-			var ae = a * e, af = a * f, be = b * e, bf = b * f;
+			/*
+			r2*r1 = i1:
 
-			te[ 0 ] = c * e;
-			te[ 4 ] = - c * f;
-			te[ 8 ] = d;
+								  1, 0, 0, 0, 0,
+								  0, cyz,-syz, 0, 0,
+								  0, syz, cyz, 0, 0,
+								  0, 0, 0, 1, 0,
+								  0, 0, 0, 0, 1
 
-			te[ 1 ] = af + be * d;
-			te[ 5 ] = ae - bf * d;
-			te[ 9 ] = - b * c;
+			 czx, 0, szx, 0, 0,  | czx	szx*syz szx*cyz 0	0 |
+			 0, 1, 0, 0, 0,  	 | 0	cyz		-syz 	0	0 |
+			-szx, 0, czx, 0, 0,  | -szx	czx*syz czx*cyz 0	0 |
+			 0, 0, 0, 1, 0,  	 | 0	0		0		1	0 |
+			 0, 0, 0, 0, 1   	 | 0	0		0		0	1 |
+			 */
 
-			te[ 2 ] = bf - ae * d;
-			te[ 6 ] = be + af * d;
-			te[ 10 ] = a * c;
+			 var i1_21 = szx*syz;
+			 var i1_31 = szx*cyz;
+			 var i1_23 = czx*syz;
+			 var i1_33 = czx*cyz;
+
+			 /*
+			 r3 * i1 = i2
+								czx, 	i1_21, 	i1_31, 	0, 	0,
+								0, 		cyz,	-syz, 	0, 	0,
+								-szx, 	i1_23, 	i1_33, 	0, 	0,
+								0, 		0, 		0, 		1, 	0,
+								0, 		0, 		0, 		0, 	1
+
+			cxy,-sxy, 0, 0, 0, | cxy*czx	cxy*i1_21 - sxy*cyz		cxy*i1_31 + sxy*syz 	0	0 |
+			sxy, cxy, 0, 0, 0, | sxy*czx	sxy*i1_21 + cxy*cyz		sxy*i1_31 - cxy*syz 	0	0 |
+			0, 0, 1, 0, 0,	   | -szx		i1_23					i1_33					0 	0 |
+			0, 0, 0, 1, 0,	   | 0			0						0						1	0 |
+			0, 0, 0, 0, 1	   | 0			0						0						0	1 |
+			*/
+
+			var i2_11 = cxy*czx;
+			var i2_21 = cxy*i1_21 - sxy*cyz;
+			var i2_31 = cxy*i1_31 + sxy*syz;
+			var i2_12 = sxy*czx;
+			var i2_22 = sxy*i1_21 + cxy*cyz;
+			var i2_32 = sxy*i1_31 - cxy*syz;
+
+			/*
+			r4 * i2 = i3
+								i2_11, 	i2_21, 	i2_31, 	0, 	0,
+								i2_12, 	i2_22,	i2_32, 	0, 	0,
+								-szx, 	i1_23, 	i1_33, 	0, 	0,
+								0, 		0, 		0, 		1, 	0,
+								0, 		0, 		0, 		0, 	1
+
+			cxw, 0, 0,-sxw, 0, | cxw*i2_11	cxw*i2_21 	cxw*i2_31 	-sxw 	0 |
+			0, 1, 0, 0, 0,     | i2_12  	i2_22 		i2_32 	 	0 	 	0 |
+			0, 0, 1, 0, 0,     | -szx	 	i1_23 	 	i1_33 	 	0 	 	0 |
+			sxw, 0, 0, cxw, 0, | sxw*i2_11 	sxw*i2_21 	sxw*i2_31 	cxw 	0 |
+			0, 0, 0, 0, 1  	   | 0			0			0			0		1 |
+			*/
+
+			var i3_11 = cxw*i2_11;
+			var i3_21 = cxw*i2_21;
+			var i3_31 = cxw*i2_31;
+			var i3_14 = sxw*i2_11;
+			var i3_24 = sxw*i2_21;
+			var i3_34 = sxw*i2_31;
+
+			/*
+			r5 * i3 = i4
+							   | i3_11	i3_21 	i3_31 	-sxw 	0 |
+							   | i2_12  i2_22 	i2_32 	 0 	 	0 |
+							   | -szx	i1_23 	i1_33 	 0 	 	0 |
+							   | i3_14 	i3_24 	i3_34 	cxw 	0 |
+							   | 0		0		0		0		1 |
+
+			1, 0, 0, 0, 0, 	   | i3_11					i3_21 					i3_31 					-sxw 		0 |
+			0, cyw, 0,-syw, 0, | cyw*i2_12 - syw*i3_14 	cyw*i2_22 - syw*i3_24 	cyw*i2_32 - syw*i3_34 	-syw*cxw 	0 |
+			0, 0, 1, 0, 0, 	   | -szx					i1_23 					i1_33 	 				0 	 		0 |
+			0, syw, 0, cyw, 0, | syw*i2_12 + cyw*i3_14 	syw*i2_22 + cyw*i1_23 	syw*i2_32 + cyw*i3_34 	cyw*cxw 	0 |
+			0, 0, 0, 0, 1  	   | 0						0						0						0			1 |
+			*/
+
+			var i4_12 = cyw*i2_12 - syw*i3_14;
+			var i4_22 = cyw*i2_22 - syw*i3_24;
+			var i4_32 = cyw*i2_32 - syw*i3_34;
+			var i4_42 = -syw*cxw;
+			var i4_14 = syw*i2_12 + cyw*i3_14;
+			var i4_24 = syw*i2_22 + cyw*i1_23;
+			var i4_34 = syw*i2_32 + cyw*i3_34;
+			var i4_44 = cyw*cxw;
+
+			/*
+			r6 * i4 = f
+							   | i3_11	i3_21 	i3_31 	-sxw 	0 |
+							   | i4_12  i4_22 	i4_32 	i4_42 	0 |
+							   | -szx	i1_23 	i1_33 	0 	 	0 |
+							   | i4_14 	i4_24 	i4_34 	i4_44 	0 |
+							   | 0		0		0		0		1 |
+
+			1, 0, 0, 0, 0,     | i3_11					i3_21 					i3_31 					-sxw 	 	0 |
+			0, 1, 0, 0, 0, 	   | i4_12  				i4_22 					i4_32 					i4_42 	 	0 |
+			0, 0, czw,-szw, 0, | -czw*szx - szw*i4_14 	czw*i1_23 - szw*i4_24 	czw*i1_33 - szw*i4_34 	-szw*i4_44 	0 |
+			0, 0, szw, czw, 0, | -szw*szx + czw*i4_14	szw*i1_23 + czw*i4_24 	szw*i1_33 + czw*i4_34 	czw*i4_44 	0 |
+			0, 0, 0, 0, 1      | 0						0						0						0			1 |
+
+			*/
+
+
+			// first col
+			te[0] = i3_11;
+			te[1] = i4_12;
+			te[2] = -czw*szx - szw*i4_14;
+			te[3] = -szw*szx + czw*i4_14;
+			te[4] = 0;
+
+			// second col
+			te[5] = i3_21;
+			te[6] = i4_22;
+			te[7] = czw*i1_23 - szw*i4_24;
+			te[8] = szw*i1_23 + czw*i4_24;
+			te[9] = 0;
+
+			// third col
+			te[10] = i3_31;
+			te[11] = i4_32;
+			te[12] = czw*i1_33 - szw*i4_34;
+			te[13] = szw*i1_33 + czw*i4_34;
+			te[14] = 0;
+
+			// fourth col
+			te[15] = -sxw;
+			te[16] = i4_42;
+			te[17] = -szw*i4_44;
+			te[18] = czw*i4_44;
+			te[19] = 0;
+
+			// fifth col
+			te[20] = 0;
+			te[21] = 0;
+			te[22] = 0;
+			te[23] = 0;
+			te[24] = 1;
 
 		} else {
 
 			console.warn( 'THREE.Matrix5: .makeRotationFromEuler() given unsupported order: ' + order );
 
 		}
-
-		// bottom row
-		te[ 3 ] = 0;
-		te[ 7 ] = 0;
-		te[ 11 ] = 0;
-
-		// last column
-		te[ 12 ] = 0;
-		te[ 13 ] = 0;
-		te[ 14 ] = 0;
-		te[ 15 ] = 1;
-
 		
 		return this;
 
@@ -319,7 +434,7 @@ Object.assign( Matrix5.prototype, {
 
 		if ( n !== undefined ) {
 
-			console.warn( 'THREE.Matrix4: .multiply() now only accepts one argument. Use .multiplyMatrices( a, b ) instead.' );
+			console.warn( 'THREE.Matrix5: .multiply() now only accepts one argument. Use .multiplyMatrices( a, b ) instead.' );
 			return this.multiplyMatrices( m, n );
 
 		}
@@ -337,7 +452,7 @@ Object.assign( Matrix5.prototype, {
 	multiplyMatrices: function ( a, b ) {
 
 		if (!a.isMatrix5 || !b.isMatrix5) {
-			throw "MUltiplying non-mat5 with mat5 mult"
+			throw "Multiplying non-mat5 with mat5 mult"
 		}
 
 		var ae = a.elements;
@@ -434,14 +549,6 @@ Object.assign( Matrix5.prototype, {
 		//TODO: make this more efficient
 		//( based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm )
 		
-		var r1 = n51 * new Matrix4().set(n12, n22, n32, n42, n13, n23, n33, n43, n14, n24, n34, n44, n15, n25, n35, n45).determinant();
-		var r2 = n52 * new Matrix4().set(n11, n21, n31, n41, n13, n23, n33, n43, n14, n24, n34, n44, n15, n25, n35, n45).determinant();
-		var r3 = n53 * new Matrix4().set(n11, n21, n31, n41, n12, n22, n32, n42, n14, n24, n34, n44, n15, n25, n35, n45).determinant();
-		var r4 = n54 * new Matrix4().set(n11, n21, n31, n41, n12, n22, n32, n42, n13, n23, n33, n43, n15, n25, n35, n45).determinant();
-		var r5 = n55 * new Matrix4().set(n11, n21, n31, n41, n12, n22, n32, n42, n13, n23, n33, n43, n14, n24, n34, n44).determinant();
-		return r1 - r2 + r3 - r4 + r5;
-		
-		/*
 		return (
 			  n51 * new Matrix4().set(n12, n22, n32, n42, n13, n23, n33, n43, n14, n24, n34, n44, n15, n25, n35, n45).determinant()
 			- n52 * new Matrix4().set(n11, n21, n31, n41, n13, n23, n33, n43, n14, n24, n34, n44, n15, n25, n35, n45).determinant()
@@ -449,7 +556,6 @@ Object.assign( Matrix5.prototype, {
 			- n54 * new Matrix4().set(n11, n21, n31, n41, n12, n22, n32, n42, n13, n23, n33, n43, n15, n25, n35, n45).determinant()
 			+ n55 * new Matrix4().set(n11, n21, n31, n41, n12, n22, n32, n42, n13, n23, n33, n43, n14, n24, n34, n44).determinant()
 		);
-		*/
 
 	},
 
@@ -852,12 +958,12 @@ Object.assign( Matrix5.prototype, {
 			cxw = cos(xw), cyw = cos(yw), czw = cos(zw);
 		*/
 
-		var r1 = new Matrix5().makeRotationYZ(yz);
-		var r2 = new Matrix5().makeRotationZX(zx);
-		var r3 = new Matrix5().makeRotationXY(xy);
-		var r4 = new Matrix5().makeRotationXW(xw);
-		var r5 = new Matrix5().makeRotationYW(yw);
-		var r6 = new Matrix5().makeRotationZW(zw);
+		var r1 = new Matrix5().makeRotationYZ(yz); //x
+		var r2 = new Matrix5().makeRotationZX(zx); //x
+		var r3 = new Matrix5().makeRotationXY(xy); //x
+		var r4 = new Matrix5().makeRotationXW(xw); //x
+		var r5 = new Matrix5().makeRotationYW(yw); //x
+		var r6 = new Matrix5().makeRotationZW(zw); //x
 
 		var rotationMat = r6.multiply(r5.multiply(r4.multiply(r3.multiply(r2.multiply(r1)))));
 

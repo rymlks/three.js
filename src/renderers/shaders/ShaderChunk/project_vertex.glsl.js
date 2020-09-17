@@ -56,9 +56,13 @@ if (sqrdist < 0.0) {
 }
 
 
-//mvPosition3D.z += mvPosition3D.w;
-//mvPosition3D.z = -sqrt(pow2(mvPosition3D.z) + pow2(mvPosition3D.w));
+//mvPosition3D.z = mvPosition3D.z * mvPosition3D.w;
+//mvPosition3D.z += -abs(mvPosition3D.w);
+
+//float wcap = mvPosition3D.w;
+
+
+// dont mess with this.
 mvPosition3D.w = 1.0;
 gl_Position = projectionMatrix * mvPosition3D;
-//*/
 `;
