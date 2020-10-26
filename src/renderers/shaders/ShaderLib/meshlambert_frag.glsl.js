@@ -6,6 +6,7 @@ uniform float opacity;
 varying vec3 vLightFront;
 varying vec3 vIndirectFront;
 
+
 #ifdef DOUBLE_SIDED
 	varying vec3 vLightBack;
 	varying vec3 vIndirectBack;
@@ -36,6 +37,9 @@ varying vec3 vIndirectFront;
 #include <clipping_planes_pars_fragment>
 
 void main() {
+	if (modelW > -0.1) {
+		//discard;
+	}
 
 	#include <clipping_planes_fragment>
 
@@ -87,10 +91,12 @@ void main() {
 
 	#include <envmap_fragment>
 
-	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+	//gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+	gl_FragColor = vec4( outgoingLight, 0.5 );
 
 	// debug
-	//gl_FragColor = vec4( diffuseColor.rgb, 1.0 );
+	//float tmp = 1.0 / (10.0 * modelW);
+	//gl_FragColor = vec4( outgoingLight.r * tmp, outgoingLight.g * tmp, outgoingLight.b * tmp, 1.0 );
 
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>

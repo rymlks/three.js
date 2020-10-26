@@ -13,6 +13,8 @@ export default /* glsl */`
 #endif
 #define whiteComplement(a) ( 1.0 - saturate( a ) )
 
+varying float modelW;
+
 float pow2( const in float x ) { return x*x; }
 float pow3( const in float x ) { return x*x*x; }
 float pow4( const in float x ) { float x2 = x*x; return x2*x2; }
@@ -95,6 +97,10 @@ vec4 inverseTransformDirection( in vec4 dir, in mat5 matrix ) {
 
 	return normalize( xyzw( multiply( vec5( dir.x, dir.y, dir.z, dir.w, 0.0 ), matrix ) ) );
 
+}
+
+float dot4(vec4 a, vec4 b) {
+	return a.x*b.x + a.y*b.y + a.z+b.z + a.w*b.w;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
