@@ -111,7 +111,7 @@ function Object4D() {
 	this.castShadow = false;
 	this.receiveShadow = false;
 
-	this.frustumCulled = true;
+	this.frustumCulled = false;
 	this.renderOrder = 0;
 
 	this.userData = {};
