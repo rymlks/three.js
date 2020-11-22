@@ -765,9 +765,12 @@ function WebGLProgram( renderer, cacheKey, parameters ) {
 	var vertexGlsl =  prefixVertex + vertexShader;
 	var fragmentGlsl =  prefixFragment + fragmentShader;
 
-	console.log( vertexGlsl );
-	console.log( fragmentGlsl );
-
+	console.log("TODO: Real shader debugger");
+	//
+	//console.log( vertexGlsl );
+	//console.log( fragmentGlsl );
+	//
+	
 	var glVertexShader = WebGLShader( gl, gl.VERTEX_SHADER, vertexGlsl );
 	var glFragmentShader = WebGLShader( gl, gl.FRAGMENT_SHADER, fragmentGlsl );
 

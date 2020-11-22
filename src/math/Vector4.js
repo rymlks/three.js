@@ -5,6 +5,7 @@
  * @author egraether / http://egraether.com/
  * @author WestLangley / http://github.com/WestLangley
  */
+import { Plane4D } from './Plane4D.js';
 
 function Vector4( x, y, z, w ) {
 
@@ -150,7 +151,7 @@ Object.assign( Vector4.prototype, {
 		this.x = v.x;
 		this.y = v.y;
 		this.z = v.z;
-		this.w = ( v.w !== undefined ) ? v.w : 1;
+		this.w = v.w;
 
 		return this;
 
@@ -564,6 +565,28 @@ Object.assign( Vector4.prototype, {
 	dot: function ( v ) {
 
 		return this.x * v.x + this.y * v.y + this.z * v.z + this.w * v.w;
+
+	},
+
+	crossVectors: function ( a, b, c ) {
+
+		var ax = a.x, ay = a.y, az = a.z, aw = a.w;
+		var bx = b.x, by = b.y, bz = b.z, bw = b.w;
+		var cx = c.x, cy = c.y, cz = c.z, cw = c.w;
+
+		var A = bx * cy - by * cx;
+		var B = bx * cz - bz * cx;
+		var C = bx * cw - bw * cx;
+		var D = by * cz - bz * cy;
+		var E = by * cw - bw * cy;
+		var F = bz * cw - bw * cz;
+
+		this.x =  ay * F - az * E + aw * D;
+		this.y = -ax * F + az * C - aw * B;
+		this.z =  ax * E - ay * C + aw * A;
+		this.w = -ax * D + ay * B - az * A;
+
+		return this;
 
 	},
 

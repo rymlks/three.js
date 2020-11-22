@@ -1,6 +1,6 @@
 import { Vector4 } from './Vector4.js';
 import { Glome } from './Glome.js';
-import { Plane } from './Plane.js';
+import { Plane4D } from './Plane4D.js';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -11,16 +11,34 @@ import { Plane } from './Plane.js';
 var _glome = new Glome();
 var _vector = new Vector4();
 
-function Frustum4D( p0, p1, p2, p3, p4, p5 ) {
+function Frustum4D( p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23 ) {
 
 	this.planes = [
 
-		( p0 !== undefined ) ? p0 : new Plane(),
-		( p1 !== undefined ) ? p1 : new Plane(),
-		( p2 !== undefined ) ? p2 : new Plane(),
-		( p3 !== undefined ) ? p3 : new Plane(),
-		( p4 !== undefined ) ? p4 : new Plane(),
-		( p5 !== undefined ) ? p5 : new Plane()
+		( p0 !== undefined ) ? p0 : new Plane4D(),
+		( p1 !== undefined ) ? p1 : new Plane4D(),
+		( p2 !== undefined ) ? p2 : new Plane4D(),
+		( p3 !== undefined ) ? p3 : new Plane4D(),
+		( p4 !== undefined ) ? p4 : new Plane4D(),
+		( p5 !== undefined ) ? p5 : new Plane4D(),
+		( p6 !== undefined ) ? p6 : new Plane4D(),
+		( p7 !== undefined ) ? p7 : new Plane4D(),
+		( p8 !== undefined ) ? p8 : new Plane4D(),
+		( p9 !== undefined ) ? p9 : new Plane4D(),
+		( p10 !== undefined ) ? p10 : new Plane4D(),
+		( p11 !== undefined ) ? p11 : new Plane4D(),
+		( p12 !== undefined ) ? p12 : new Plane4D(),
+		( p13 !== undefined ) ? p13 : new Plane4D(),
+		( p14 !== undefined ) ? p14 : new Plane4D(),
+		( p15 !== undefined ) ? p15 : new Plane4D(),
+		( p16 !== undefined ) ? p16 : new Plane4D(),
+		( p17 !== undefined ) ? p17 : new Plane4D(),
+		( p18 !== undefined ) ? p18 : new Plane4D(),
+		( p19 !== undefined ) ? p19 : new Plane4D(),
+		( p20 !== undefined ) ? p20 : new Plane4D(),
+		( p21 !== undefined ) ? p21 : new Plane4D(),
+		( p22 !== undefined ) ? p22 : new Plane4D(),
+		( p23 !== undefined ) ? p23 : new Plane4D()
 
 	];
 
@@ -28,7 +46,7 @@ function Frustum4D( p0, p1, p2, p3, p4, p5 ) {
 
 Object.assign( Frustum4D.prototype, {
 
-	set: function ( p0, p1, p2, p3, p4, p5 ) {
+	set: function ( p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23 ) {
 
 		var planes = this.planes;
 
@@ -38,6 +56,24 @@ Object.assign( Frustum4D.prototype, {
 		planes[ 3 ].copy( p3 );
 		planes[ 4 ].copy( p4 );
 		planes[ 5 ].copy( p5 );
+		planes[ 6 ].copy( p6 );
+		planes[ 7 ].copy( p7 );
+		planes[ 8 ].copy( p8 );
+		planes[ 9 ].copy( p9 );
+		planes[ 10 ].copy( p10 );
+		planes[ 11 ].copy( p11 );
+		planes[ 12 ].copy( p12 );
+		planes[ 13 ].copy( p13 );
+		planes[ 14 ].copy( p14 );
+		planes[ 15 ].copy( p15 );
+		planes[ 16 ].copy( p16 );
+		planes[ 17 ].copy( p17 );
+		planes[ 18 ].copy( p18 );
+		planes[ 19 ].copy( p19 );
+		planes[ 20 ].copy( p20 );
+		planes[ 21 ].copy( p21 );
+		planes[ 22 ].copy( p22 );
+		planes[ 23 ].copy( p23 );
 
 		return this;
 
@@ -53,7 +89,7 @@ Object.assign( Frustum4D.prototype, {
 
 		var planes = this.planes;
 
-		for ( var i = 0; i < 6; i ++ ) {
+		for ( var i = 0; i < 24; i ++ ) {
 
 			planes[ i ].copy( frustum.planes[ i ] );
 
@@ -64,22 +100,7 @@ Object.assign( Frustum4D.prototype, {
 	},
 
 	setFromProjectionMatrix: function ( m ) {
-		//console.error("THREE.Frustum4D: .setFromProjectionMatrix() is pretty fuckin gross");
-
-		var planes = this.planes;
-		var me = m.elements;
-		var me0 = me[ 0 ], me1 = me[ 1 ], me2 = me[ 2 ], me3 = me[ 3 ];
-		var me4 = me[ 5 ], me5 = me[ 6 ], me6 = me[ 7 ], me7 = me[ 8 ];
-		var me8 = me[ 10 ], me9 = me[ 11 ], me10 = me[ 12 ], me11 = me[ 13 ];
-		var me12 = me[ 15 ], me13 = me[ 16 ], me14 = me[ 17 ], me15 = me[ 18 ];
-
-		planes[ 0 ].setComponents( me3 - me0, me7 - me4, me11 - me8, me15 - me12 ).normalize();
-		planes[ 1 ].setComponents( me3 + me0, me7 + me4, me11 + me8, me15 + me12 ).normalize();
-		planes[ 2 ].setComponents( me3 + me1, me7 + me5, me11 + me9, me15 + me13 ).normalize();
-		planes[ 3 ].setComponents( me3 - me1, me7 - me5, me11 - me9, me15 - me13 ).normalize();
-		planes[ 4 ].setComponents( me3 - me2, me7 - me6, me11 - me10, me15 - me14 ).normalize();
-		planes[ 5 ].setComponents( me3 + me2, me7 + me6, me11 + me10, me15 + me14 ).normalize();
-
+		//console.error("THREE.Frustum4D: .setFromProjectionMatrix() doesn't do anything.");
 		return this;
 
 	},
@@ -112,7 +133,7 @@ Object.assign( Frustum4D.prototype, {
 		var center = glome.center;
 		var negRadius = - glome.radius;
 
-		for ( var i = 0; i < 6; i ++ ) {
+		for ( var i = 0; i < 24; i ++ ) {
 
 			var distance = planes[ i ].distanceToPoint( center );
 
@@ -133,7 +154,7 @@ Object.assign( Frustum4D.prototype, {
 
 		var planes = this.planes;
 
-		for ( var i = 0; i < 6; i ++ ) {
+		for ( var i = 0; i < 24; i ++ ) {
 
 			var plane = planes[ i ];
 
@@ -142,6 +163,7 @@ Object.assign( Frustum4D.prototype, {
 			_vector.x = plane.normal.x > 0 ? box.max.x : box.min.x;
 			_vector.y = plane.normal.y > 0 ? box.max.y : box.min.y;
 			_vector.z = plane.normal.z > 0 ? box.max.z : box.min.z;
+			_vector.w = plane.normal.w > 0 ? box.max.w : box.min.w;
 
 			if ( plane.distanceToPoint( _vector ) < 0 ) {
 
@@ -159,7 +181,7 @@ Object.assign( Frustum4D.prototype, {
 
 		var planes = this.planes;
 
-		for ( var i = 0; i < 6; i ++ ) {
+		for ( var i = 0; i < 24; i ++ ) {
 
 			if ( planes[ i ].distanceToPoint( point ) < 0 ) {
 

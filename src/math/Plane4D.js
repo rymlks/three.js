@@ -9,47 +9,76 @@ var _vector1 = new Vector4();
 var _vector2 = new Vector4();
 var _normalMatrix = new Matrix4();
 
-function Plane4D( normal, constant ) {
+function Plane4D( point, normal, vec1, vec2 ) {
 
 	// normal is assumed to be normalized
 
-	this.normal = ( normal !== undefined ) ? normal : new Vector4( 1, 0, 0, 0 );
-	this.constant = ( constant !== undefined ) ? constant : 0;
-
+	this.point = ( point !== undefined ) ? point : new Vector4( 0, 0, 0, 0 );
+	this.normal = ( normal !== undefined ) ? normal : new Plane4D(this.position, this);
+	this.vec1 = ( vec1 !== undefined ) ? vec1 : new Vector4( 0, 0, 0, 0 );
+	this.vec2 = ( vec2 !== undefined ) ? vec2 : new Vector4( 0, 0, 0, 0 );
 }
 
 Object.assign( Plane4D.prototype, {
 
 	isPlane: true,
 
-	set: function ( normal, constant ) {
+	set: function ( point, normal, vec1, vec2 ) {
 
+		this.point.copy( point )
 		this.normal.copy( normal );
-		this.constant = constant;
+		this.vec1.copy( vec1 );
+		this.vec2.copy( vec2 );
 
 		return this;
 
 	},
 
-	setComponents: function ( x, y, z, w, v ) {
+	setFromPointVector: function ( point, a, b ) {
 
-		this.normal.set( x, y, z, w );
-		this.constant = v;
+		var nvec1 = new Vector4();
+		var nvec2 = new Vector4();
 
-		return this;
+		for (var m of ['x', 'y', 'z', 'w']) {
+			var pivot = a[m];
+			if (pivot !== 0) {
+				for (var n of ['x', 'y', 'z', 'w']) {
+					if (m != n) {
+						nvec1[n] = a[m];
+						nvec1[m] = -a[n];
+						var indices = ['x', 'y', 'z', 'w'];
+						indices.splice(indices.indexOf(n), 1);
+						indices.splice(indices.indexOf(m), 1);
 
-	},
+						var o = indices[0];
+						var p = indices[1];
 
-	setFromNormalAndCoplanarPoint: function ( normal, point ) {
+						nvec1[o] = a[p];
+						nvec1[p] = -a[o];
+					}
+				}
+			}
+		}
+		if (i === 4) {
+			console.error("Vector4.crossVectors(): Degenerate vector passed in for a")
+		}
 
-		this.normal.copy( normal );
-		this.constant = - point.dot( this.normal );
+		nvec2.crossVectors(a, b, nvec1);
+
+		this.point = point;
+		this.vec1 = a;
+		this.vec2 = b;
+
+		this.normal.point = point;
+		this.normal.vec1 = nvec1;
+		this.normal.vec2 = nvec2;
 
 		return this;
 
 	},
 
 	setFromCoplanarPoints: function ( a, b, c ) {
+		console.error("THREE.Plane4D - setFromCoplanarPoints(): This function is not done.")
 
 		var normal = _vector1.subVectors( c, b ).cross( _vector2.subVectors( a, b ) ).normalize();
 
@@ -69,14 +98,22 @@ Object.assign( Plane4D.prototype, {
 
 	copy: function ( plane ) {
 
-		this.normal.copy( plane.normal );
-		this.constant = plane.constant;
+		this.point.copy( plane.point )
+
+		this.vec1.copy( plane.vec1 );
+		this.vec2.copy( plane.vec2 );
+
+		this.normal.point.copy( plane.normal.point );
+
+		this.normal.vec1.copy( plane.normal.vec1 );
+		this.normal.vec2.copy( plane.normal.vec2 );
 
 		return this;
 
 	},
 
 	normalize: function () {
+		console.error("THREE.Plane4D - normalize(): This function is not done.")
 
 		// Note: will lead to a divide by zero if the plane is invalid.
 
@@ -89,6 +126,7 @@ Object.assign( Plane4D.prototype, {
 	},
 
 	negate: function () {
+		console.error("THREE.Plane4D - negate(): This function is not done.")
 
 		this.constant *= - 1;
 		this.normal.negate();
@@ -98,18 +136,21 @@ Object.assign( Plane4D.prototype, {
 	},
 
 	distanceToPoint: function ( point ) {
+		console.error("THREE.Plane4D - distanceToPoint(): This function is not done.")
 
 		return this.normal.dot( point ) + this.constant;
 
 	},
 
 	distanceToSphere: function ( sphere ) {
+		console.error("THREE.Plane4D - distanceToSphere(): This function is not done.")
 
 		return this.distanceToPoint( sphere.center ) - sphere.radius;
 
 	},
 
 	projectPoint: function ( point, target ) {
+		console.error("THREE.Plane4D - projectPoint(): This function is not done.")
 
 		if ( target === undefined ) {
 
@@ -123,6 +164,7 @@ Object.assign( Plane4D.prototype, {
 	},
 
 	intersectLine: function ( line, target ) {
+		console.error("THREE.Plane4D - intersectLine(): This function is not done.")
 
 		if ( target === undefined ) {
 
@@ -162,6 +204,7 @@ Object.assign( Plane4D.prototype, {
 	},
 
 	intersectsLine: function ( line ) {
+		console.error("THREE.Plane4D - intersectsLine(): This function is not done.")
 
 		// Note: this tests if a line intersects the plane, not whether it (or its end-points) are coplanar with it.
 
@@ -185,6 +228,7 @@ Object.assign( Plane4D.prototype, {
 	},
 
 	coplanarPoint: function ( target ) {
+		console.error("THREE.Plane4D - coplanarPoint(): This function is not done.")
 
 		if ( target === undefined ) {
 
@@ -198,6 +242,7 @@ Object.assign( Plane4D.prototype, {
 	},
 
 	applyMatrix4: function ( matrix, optionalNormalMatrix ) {
+		console.error("THREE.Plane4D - applyMatrix4(): This function is not done.")
 
 		var normalMatrix = optionalNormalMatrix || _normalMatrix.getNormalMatrix( matrix );
 
@@ -212,6 +257,7 @@ Object.assign( Plane4D.prototype, {
 	},
 
 	translate: function ( offset ) {
+		console.error("THREE.Plane4D - translate(): This function is not done.")
 
 		this.constant -= offset.dot( this.normal );
 
@@ -220,6 +266,7 @@ Object.assign( Plane4D.prototype, {
 	},
 
 	equals: function ( plane ) {
+		console.error("THREE.Plane4D - equals(): This function is not done.")
 
 		return plane.normal.equals( this.normal ) && ( plane.constant === this.constant );
 
@@ -228,4 +275,4 @@ Object.assign( Plane4D.prototype, {
 } );
 
 
-export { Plane };
+export { Plane4D };
