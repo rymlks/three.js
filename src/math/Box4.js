@@ -8,6 +8,14 @@ var _points = [
 	new Vector4(),
 	new Vector4(),
 	new Vector4(),
+	new Vector4(),
+	new Vector4(),
+	new Vector4(),
+	new Vector4(),
+	new Vector4(),
+	new Vector4(),
+	new Vector4(),
+	new Vector4(),
 	new Vector4()
 ];
 
@@ -330,11 +338,11 @@ Object.assign( Box4.prototype, {
 
 	intersectsBox: function ( box ) {
 
-		// using 6 splitting planes to rule out intersections.
+		// using 8 splitting planes to rule out intersections.
 		return box.max.x < this.min.x || box.min.x > this.max.x ||
 			box.max.y < this.min.y || box.min.y > this.max.y ||
 			box.max.z < this.min.z || box.min.z > this.max.z ||
-			box.max.w < this.min.w || box.max.w > this.max.w ? false : true;
+			box.max.w < this.min.w || box.min.w > this.max.w ? false : true;
 
 	},
 
@@ -510,7 +518,6 @@ Object.assign( Box4.prototype, {
 	},
 
 	applyMatrix5: function ( matrix ) {
-		console.log("applyin a mat5 to a box4")
 
 		// transform of empty box is an empty box.
 		if ( this.isEmpty() ) return this;
@@ -525,14 +532,14 @@ Object.assign( Box4.prototype, {
 		_points[ 6 ].set( this.max.x, this.max.y, this.min.z, this.min.w).applyMatrix5( matrix ); // 1100
 		_points[ 7 ].set( this.max.x, this.max.y, this.max.z, this.min.w).applyMatrix5( matrix ); // 1110
 
-		_points[ 0 ].set( this.min.x, this.min.y, this.min.z, this.max.w).applyMatrix5( matrix ); // 0001
-		_points[ 1 ].set( this.min.x, this.min.y, this.max.z, this.max.w).applyMatrix5( matrix ); // 0011
-		_points[ 2 ].set( this.min.x, this.max.y, this.min.z, this.max.w).applyMatrix5( matrix ); // 0101
-		_points[ 3 ].set( this.min.x, this.max.y, this.max.z, this.max.w).applyMatrix5( matrix ); // 0111
-		_points[ 4 ].set( this.max.x, this.min.y, this.min.z, this.max.w).applyMatrix5( matrix ); // 1001
-		_points[ 5 ].set( this.max.x, this.min.y, this.max.z, this.max.w).applyMatrix5( matrix ); // 1011
-		_points[ 6 ].set( this.max.x, this.max.y, this.min.z, this.max.w).applyMatrix5( matrix ); // 1101
-		_points[ 7 ].set( this.max.x, this.max.y, this.max.z, this.max.w).applyMatrix5( matrix ); // 1111
+		_points[ 8 ].set( this.min.x, this.min.y, this.min.z, this.max.w).applyMatrix5( matrix ); // 0001
+		_points[ 9 ].set( this.min.x, this.min.y, this.max.z, this.max.w).applyMatrix5( matrix ); // 0011
+		_points[ 10 ].set( this.min.x, this.max.y, this.min.z, this.max.w).applyMatrix5( matrix ); // 0101
+		_points[ 11 ].set( this.min.x, this.max.y, this.max.z, this.max.w).applyMatrix5( matrix ); // 0111
+		_points[ 12 ].set( this.max.x, this.min.y, this.min.z, this.max.w).applyMatrix5( matrix ); // 1001
+		_points[ 13 ].set( this.max.x, this.min.y, this.max.z, this.max.w).applyMatrix5( matrix ); // 1011
+		_points[ 14 ].set( this.max.x, this.max.y, this.min.z, this.max.w).applyMatrix5( matrix ); // 1101
+		_points[ 15 ].set( this.max.x, this.max.y, this.max.z, this.max.w).applyMatrix5( matrix ); // 1111
 
 		this.setFromPoints( _points );
 
