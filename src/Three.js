@@ -179,6 +179,7 @@ export * from './geometries4d/Geometries4D.js';
 export { Camera4D } from './cameras4d/Camera4D.js';
 export { PerspectiveCamera4D } from './cameras4d/PerspectiveCamera4D.js';
 export { PhysicsMesh4D } from './physics/PhysicsMesh4D.js';
+export { TesseractBufferGeometry4D } from './geometries4d/TesseractGeometry4D.js';
 
 if ( typeof __THREE_DEVTOOLS__ !== 'undefined' ) {
 
