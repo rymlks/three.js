@@ -137,40 +137,16 @@ class BoxBufferGeometry4D extends BufferGeometry4D {
 					vertices.push( vector.x, vector.y, vector.z, vector.w );
 
 					// set values to correct vector component
-					/*
-					vector[ u ] = 1;
-					vector[ v ] = 0;
-					vector[ w ] = 0;
-					vector[ 'w' ] = 0;
-
-					console.log("basisx(" + vector.x +","+vector.y+","+vector.z+","+vector.w+")");
-
-					//*/
-
-					///*
 					vector[ u ] = 0;
 					vector[ v ] = 0;
 					vector[ w ] = depth > 0 ? 1 : - 1;
 					vector[ 'w' ] = 0;
-					//*/
 					// now apply vector to basis
-
 					basesX.push( vector.x, vector.y, vector.z, vector.w );
-
-
-					/*
-					vector[ u ] = 0;
-					vector[ v ] = 1;
-					vector[ w ] = 0;
-					vector[ 'w' ] = 0;
-					console.log("basisy(" + vector.x +","+vector.y+","+vector.z+","+vector.w+")\n");
-					//*/
 					vector[ u ] = 0;
 					vector[ v ] = 0;
 					vector[ w ] = 0;
-					vector[ 'w' ] = 1;
-
-					vector.normalize();
+					vector[ 'w' ] = -1;
 					basesY.push( vector.x, vector.y, vector.z, vector.w );
 
 					// uvs

@@ -35,10 +35,16 @@ vec3 directLightColor_Diffuse;
 		getPointDirectLightIrradiance( pointLights[ i ], geometry, directLight );
 
 		vec4 projection = normalize(geometry.projectionMatrix * directLight.direction);
-		//directLight.color = (geometry.basisX + geometry.basisY).xyz;
 
+		float c1 = abs(dot(projection, geometry.basisX));
+		float c2 = abs(dot(projection, geometry.basisY));
+
+		projection = c1 * geometry.basisX + c2 * geometry.basisY;
+
+		projection = normalize(geometry.basisX + geometry.basisY);
+		
 		dotNL = dot( projection, directLight.direction );
-		//dotNL = 1.0;
+		
 		directLightColor_Diffuse = PI * directLight.color;
 
 		vLightFront += saturate( dotNL ) * directLightColor_Diffuse;
