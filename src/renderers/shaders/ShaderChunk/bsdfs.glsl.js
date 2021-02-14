@@ -283,7 +283,7 @@ vec3 BRDF_Specular_GGX_Environment( const in vec3 viewDir, const in vec3 normal,
 // http://www.jcgt.org/published/0008/01/03/
 void BRDF_Specular_Multiscattering_Environment( const in GeometricContext geometry, const in vec3 specularColor, const in float roughness, inout vec3 singleScatter, inout vec3 multiScatter ) {
 
-	float dotNV = saturate( dot( geometry.normal, geometry.viewDir ) );
+	float dotNV = saturate( dot( geometry.basisX, geometry.viewDir ) );
 
 	vec3 F = F_Schlick_RoughnessDependent( specularColor, dotNV, roughness );
 	vec2 brdf = integrateSpecularBRDF( dotNV, roughness );
@@ -319,9 +319,9 @@ vec3 BRDF_Specular_BlinnPhong( const in IncidentLight incidentLight, const in Ge
 
 	// XXX NOT 4D
 
-	//float dotNL = saturate( dot( geometry.normal, incidentLight.direction ) );
-	//float dotNV = saturate( dot( geometry.normal, geometry.viewDir ) );
-	float dotNH = saturate( dot( geometry.normal.xyz, halfDir.xyz ) );
+	//float dotNL = saturate( dot( geometry.basisX, incidentLight.direction ) );
+	//float dotNV = saturate( dot( geometry.basisX, geometry.viewDir ) );
+	float dotNH = saturate( dot( geometry.basisX.xyz, halfDir.xyz ) );
 	float dotLH = saturate( dot( incidentLight.direction.xyz, halfDir.xyz ) );
 
 	vec3 F = F_Schlick( specularColor, dotLH );
@@ -365,7 +365,7 @@ float V_Neubelt(float NoV, float NoL) {
 
 vec3 BRDF_Specular_Sheen( const in float roughness, const in vec3 L, const in GeometricContext geometry, vec3 specularColor ) {
 
-	vec3 N = geometry.normal;
+	vec3 N = geometry.basisX;
 	vec3 V = geometry.viewDir;
 
 	vec3 H = normalize( V + L );

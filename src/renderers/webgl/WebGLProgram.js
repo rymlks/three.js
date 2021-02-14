@@ -507,7 +507,8 @@ function WebGLProgram( renderer, cacheKey, parameters ) {
 			'#endif',
 
 			'attribute vec4 position;',
-			'attribute vec4 normal;',
+			'attribute vec4 basisX;',
+			'attribute vec4 basisY;',
 			'attribute vec2 uv;',
 
 			'#ifdef USE_TANGENT',

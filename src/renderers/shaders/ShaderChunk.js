@@ -5,6 +5,7 @@ import aomap_fragment from './ShaderChunk/aomap_fragment.glsl.js';
 import aomap_pars_fragment from './ShaderChunk/aomap_pars_fragment.glsl.js';
 import begin_vertex from './ShaderChunk/begin_vertex.glsl.js';
 import beginnormal_vertex from './ShaderChunk/beginnormal_vertex.glsl.js';
+import beginbasis_vertex from './ShaderChunk/beginbasis_vertex.glsl.js';
 import bsdfs from './ShaderChunk/bsdfs.glsl.js';
 import bumpmap_pars_fragment from './ShaderChunk/bumpmap_pars_fragment.glsl.js';
 import clipping_planes_fragment from './ShaderChunk/clipping_planes_fragment.glsl.js';
@@ -18,6 +19,7 @@ import color_vertex from './ShaderChunk/color_vertex.glsl.js';
 import common from './ShaderChunk/common.glsl.js';
 import cube_uv_reflection_fragment from './ShaderChunk/cube_uv_reflection_fragment.glsl.js';
 import defaultnormal_vertex from './ShaderChunk/defaultnormal_vertex.glsl.js';
+import defaultbasis_vertex from './ShaderChunk/defaultbasis_vertex.glsl.js';
 import displacementmap_pars_vertex from './ShaderChunk/displacementmap_pars_vertex.glsl.js';
 import displacementmap_vertex from './ShaderChunk/displacementmap_vertex.glsl.js';
 import emissivemap_fragment from './ShaderChunk/emissivemap_fragment.glsl.js';
@@ -137,6 +139,7 @@ export var ShaderChunk = {
 	aomap_pars_fragment: aomap_pars_fragment,
 	begin_vertex: begin_vertex,
 	beginnormal_vertex: beginnormal_vertex,
+	beginbasis_vertex: beginbasis_vertex,
 	bsdfs: bsdfs,
 	bumpmap_pars_fragment: bumpmap_pars_fragment,
 	clipping_planes_fragment: clipping_planes_fragment,
@@ -150,6 +153,7 @@ export var ShaderChunk = {
 	common: common,
 	cube_uv_reflection_fragment: cube_uv_reflection_fragment,
 	defaultnormal_vertex: defaultnormal_vertex,
+	defaultbasis_vertex: defaultbasis_vertex,
 	displacementmap_pars_vertex: displacementmap_pars_vertex,
 	displacementmap_vertex: displacementmap_vertex,
 	emissivemap_fragment: emissivemap_fragment,

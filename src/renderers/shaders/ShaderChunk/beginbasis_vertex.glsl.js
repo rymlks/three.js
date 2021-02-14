@@ -1,5 +1,6 @@
 export default /* glsl */`
-vec4 objectNormal = vec4( basisy );
+vec4 objectBasisX = vec4( basisX );
+vec4 objectBasisY = vec4( basisY );
 
 #ifdef USE_TANGENT
 

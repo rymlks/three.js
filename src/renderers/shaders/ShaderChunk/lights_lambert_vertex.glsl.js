@@ -3,13 +3,17 @@ vec3 diffuse = vec3( 1.0 );
 
 GeometricContext geometry;
 geometry.position = xyzw(mvPosition);
-geometry.normal = normalize( transformedNormal );
+geometry.basisX = normalize( vec4(transformedBasisX.x, transformedBasisX.y, transformedBasisX.z, transformedBasisX.w ) );
+geometry.basisY = normalize( vec4(transformedBasisY.x, transformedBasisY.y, transformedBasisY.z, transformedBasisY.w ) );
 geometry.viewDir = ( isOrthographic ) ? vec4( 0, 0, 1, 0 ) : normalize( -xyzw(mvPosition) );
+setProjectionMatrix(geometry);
 
 GeometricContext backGeometry;
 backGeometry.position = geometry.position;
-backGeometry.normal = -geometry.normal;
+backGeometry.basisX = -geometry.basisX;
+backGeometry.basisY = -geometry.basisY;
 backGeometry.viewDir = geometry.viewDir;
+setProjectionMatrix(backGeometry);
 
 vLightFront = vec3( 0.0 );
 vIndirectFront = vec3( 0.0 );
@@ -30,7 +34,11 @@ vec3 directLightColor_Diffuse;
 
 		getPointDirectLightIrradiance( pointLights[ i ], geometry, directLight );
 
-		dotNL = dot( geometry.normal, directLight.direction );
+		vec4 projection = normalize(geometry.projectionMatrix * directLight.direction);
+		//directLight.color = (geometry.basisX + geometry.basisY).xyz;
+
+		dotNL = dot( projection, directLight.direction );
+		//dotNL = 1.0;
 		directLightColor_Diffuse = PI * directLight.color;
 
 		vLightFront += saturate( dotNL ) * directLightColor_Diffuse;
@@ -52,7 +60,7 @@ vec3 directLightColor_Diffuse;
 
 		getSpotDirectLightIrradiance( spotLights[ i ], geometry, directLight );
 
-		dotNL = dot( geometry.normal, directLight.direction );
+		dotNL = dot( geometry.basisX, directLight.direction );
 		directLightColor_Diffuse = PI * directLight.color;
 
 		vLightFront += saturate( dotNL ) * directLightColor_Diffuse;
@@ -85,7 +93,7 @@ vec3 directLightColor_Diffuse;
 
 		getDirectionalDirectLightIrradiance( directionalLights[ i ], geometry, directLight );
 
-		dotNL = dot( geometry.normal, directLight.direction );
+		dotNL = dot( geometry.basisX, directLight.direction );
 		directLightColor_Diffuse = PI * directLight.color;
 
 		vLightFront += saturate( dotNL ) * directLightColor_Diffuse;

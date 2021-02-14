@@ -69,7 +69,8 @@ class BoxBufferGeometry4D extends BufferGeometry4D {
 
 		var indices = [];
 		var vertices = [];
-		var normals = [];
+		var basesX = [];
+		var basesY = [];
 		var uvs = [];
 
 		// helper variables
@@ -90,7 +91,8 @@ class BoxBufferGeometry4D extends BufferGeometry4D {
 
 		this.setIndex( indices );
 		this.setAttribute( 'position', new Float32BufferAttribute( vertices, 4 ) );
-		this.setAttribute( 'normal', new Float32BufferAttribute( normals, 4 ) );
+		this.setAttribute( 'basisX', new Float32BufferAttribute( basesX, 4 ) );
+		this.setAttribute( 'basisY', new Float32BufferAttribute( basesY, 4 ) );
 		this.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
 
 		function buildPlane( u, v, w, udir, vdir, width, height, depth, gridX, gridY, materialIndex ) {
@@ -128,23 +130,48 @@ class BoxBufferGeometry4D extends BufferGeometry4D {
 					vector[ v ] = y * vdir;
 					vector[ w ] = depthHalf;
 					vector[ 'w' ] = 0;
+					console.log("vertex(" + vector.x +","+vector.y+","+vector.z+","+vector.w+")");
 
 					// now apply vector to vertex buffer
 
 					vertices.push( vector.x, vector.y, vector.z, vector.w );
 
 					// set values to correct vector component
+					/*
+					vector[ u ] = 1;
+					vector[ v ] = 0;
+					vector[ w ] = 0;
+					vector[ 'w' ] = 0;
 
+					console.log("basisx(" + vector.x +","+vector.y+","+vector.z+","+vector.w+")");
+
+					//*/
+
+					///*
 					vector[ u ] = 0;
 					vector[ v ] = 0;
 					vector[ w ] = depth > 0 ? 1 : - 1;
+					vector[ 'w' ] = 0;
+					//*/
+					// now apply vector to basis
+
+					basesX.push( vector.x, vector.y, vector.z, vector.w );
+
+
+					/*
+					vector[ u ] = 0;
+					vector[ v ] = 1;
+					vector[ w ] = 0;
+					vector[ 'w' ] = 0;
+					console.log("basisy(" + vector.x +","+vector.y+","+vector.z+","+vector.w+")\n");
+					//*/
+					vector[ u ] = 0;
+					vector[ v ] = 0;
+					vector[ w ] = 0;
 					vector[ 'w' ] = 1;
 
 					vector.normalize();
-
-					// now apply vector to normal buffer
-
-					normals.push( vector.x, vector.y, vector.z, vector.w );
+					basesY.push( vector.x, vector.y, vector.z, vector.w );
 
 					// uvs
 
