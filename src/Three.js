@@ -131,6 +131,7 @@ export { Glome } from './math/Glome.js';
 export { Ray } from './math/Ray.js';
 export { Matrix5 } from './math/Matrix5.js';
 export { Matrix4 } from './math/Matrix4.js';
+export { Matrix4x2 } from './math/Matrix4x2.js';
 export { Matrix3 } from './math/Matrix3.js';
 export { Box4 } from './math/Box4.js';
 export { Box3 } from './math/Box3.js';

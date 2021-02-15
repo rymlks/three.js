@@ -8,6 +8,7 @@ import { Vector4 } from './Vector4.js';
 var _vector1 = new Vector4();
 var _vector2 = new Vector4();
 var _normalMatrix = new Matrix4();
+var _projectionMatrix = new Matrix4();
 
 function Plane4D( point, normal, vec1, vec2 ) {
 

@@ -52,12 +52,43 @@ struct ReflectedLight {
 
 struct GeometricContext {
 	vec4 position;
-	vec4 normal;
+	vec4 basisX;
+	vec4 basisY;
 	vec4 viewDir;
+	mat4 projectionMatrix;
 #ifdef CLEARCOAT
 	vec4 clearcoatNormal;
 #endif
 };
+
+
+void setProjectionMatrix(out GeometricContext geometry) {
+	mat4 projectionMatrix;
+	vec4 v1 = geometry.basisX;
+	vec4 v2 = geometry.basisY;
+
+	projectionMatrix[0][0] = v1.x*v1.x + v2.x*v2.x;
+	projectionMatrix[0][1] = v1.x*v1.y + v2.x*v2.y;
+	projectionMatrix[0][2] = v1.x*v1.z + v2.x*v2.z;
+	projectionMatrix[0][3] = v1.x*v1.w + v2.x*v2.w;
+
+	projectionMatrix[1][0] = v1.y*v1.x + v2.y*v2.x;
+	projectionMatrix[1][1] = v1.y*v1.y + v2.y*v2.y;
+	projectionMatrix[1][2] = v1.y*v1.z + v2.y*v2.z;
+	projectionMatrix[1][3] = v1.y*v1.w + v2.y*v2.w;
+
+	projectionMatrix[2][0] = v1.z*v1.x + v2.z*v2.x;
+	projectionMatrix[2][1] = v1.z*v1.y + v2.z*v2.y;
+	projectionMatrix[2][2] = v1.z*v1.z + v2.z*v2.z;
+	projectionMatrix[2][3] = v1.z*v1.w + v2.z*v2.w;
+
+	projectionMatrix[3][0] = v1.w*v1.x + v2.w*v2.x;
+	projectionMatrix[3][1] = v1.w*v1.y + v2.w*v2.y;
+	projectionMatrix[3][2] = v1.w*v1.z + v2.w*v2.z;
+	projectionMatrix[3][3] = v1.w*v1.w + v2.w*v2.w;
+
+	geometry.projectionMatrix = projectionMatrix;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////
 // 4D functions

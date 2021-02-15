@@ -73,7 +73,8 @@ class TesseractBufferGeometry4D extends BufferGeometry4D {
 
 		var indices = [];
 		var vertices = [];
-		var normals = [];
+		var basesX = [];
+		var basesY = [];
 		var uvs = [];
 
 		// helper variables
@@ -92,32 +93,33 @@ class TesseractBufferGeometry4D extends BufferGeometry4D {
 		buildPlane( 'w', 'y', 'z', 'x', 1, - 1, spiss, height, depth, - width, spissSegments, heightSegments, 5 ); // nxpz
 		buildPlane( 'w', 'y', 'z', 'x', - 1, 1, spiss, height, - depth, width, spissSegments, heightSegments, 6 ); // pxnz
 		buildPlane( 'w', 'y', 'z', 'x', 1, 1, spiss, height, - depth, - width, spissSegments, heightSegments, 7 ); // nxnz
-
+		
 		buildPlane( 'y', 'z', 'w', 'x', - 1, - 1, height, depth, spiss, width, heightSegments, depthSegments, 8  ); // pxpz
 		buildPlane( 'y', 'z', 'w', 'x', 1, - 1, height, depth, spiss, - width, heightSegments, depthSegments, 9  ); // nxpz
 		buildPlane( 'y', 'z', 'w', 'x', - 1, 1, height, depth, - spiss, width, heightSegments, depthSegments, 10 ); // pxnz
 		buildPlane( 'y', 'z', 'w', 'x', 1, 1, height, depth, - spiss, - width, heightSegments, depthSegments, 11 ); // nxnz
-
+		
 		buildPlane( 'y', 'x', 'w', 'z', - 1, - 1, height, width, spiss, depth, heightSegments, widthSegments, 12 ); // pzpw
 		buildPlane( 'y', 'x', 'w', 'z', 1, - 1, height, width, spiss, - depth, heightSegments, widthSegments, 13 ); // nzpw
 		buildPlane( 'y', 'x', 'w', 'z', - 1, 1, height, width, - spiss, depth, heightSegments, widthSegments, 14 ); // pznw
 		buildPlane( 'y', 'x', 'w', 'z', 1, 1, height, width, - spiss, - depth, heightSegments, widthSegments, 15 ); // nznw
-
+		
 		buildPlane( 'w', 'x', 'y', 'z', - 1, - 1, spiss, width, height, depth, spissSegments, widthSegments, 16 ); // pzpy
 		buildPlane( 'w', 'x', 'y', 'z', 1, - 1, spiss, width, height, - depth, spissSegments, widthSegments, 17 ); // nzpy
 		buildPlane( 'w', 'x', 'y', 'z', - 1, 1, spiss, width, - height, depth, spissSegments, widthSegments, 18 ); // pzny
 		buildPlane( 'w', 'x', 'y', 'z', 1, 1, spiss, width, - height, - depth, spissSegments, widthSegments, 19 ); // nzny
-
+		
 		buildPlane( 'z', 'x', 'y', 'w', - 1, - 1, depth, width, height, spiss, depthSegments, widthSegments, 20 ); // pzpy
 		buildPlane( 'z', 'x', 'y', 'w', 1, - 1, depth, width, height, - spiss, depthSegments, widthSegments, 21 ); // nzpy
 		buildPlane( 'z', 'x', 'y', 'w', - 1, 1, depth, width, - height, spiss, depthSegments, widthSegments, 22 ); // pzny
 		buildPlane( 'z', 'x', 'y', 'w', 1, 1, depth, width, - height, - spiss, depthSegments, widthSegments, 23 ); // nzny
-
+		
 		// build geometry
 
 		this.setIndex( indices );
 		this.setAttribute( 'position', new Float32BufferAttribute( vertices, 4 ) );
-		this.setAttribute( 'normal', new Float32BufferAttribute( normals, 4 ) );
+		this.setAttribute( 'basisX', new Float32BufferAttribute( basesX, 4 ) );
+		this.setAttribute( 'basisY', new Float32BufferAttribute( basesY, 4 ) );
 		this.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
 
 		function buildPlane( u, v, w, t, udir, vdir, width, height, depth, spiss, gridX, gridY, materialIndex ) {
@@ -162,18 +164,17 @@ class TesseractBufferGeometry4D extends BufferGeometry4D {
 					vertices.push( vector.x, vector.y, vector.z, vector.w );
 
 					// set values to correct vector component
-
 					vector[ u ] = 0;
 					vector[ v ] = 0;
 					vector[ w ] = depth > 0 ? 1 : - 1;
-					vector[ 'w' ] = 1;
-
-					vector.normalize();
-
-					// now apply vector to normal buffer
-
-					normals.push( vector.x, vector.y, vector.z, vector.w );
-
+					vector[ t ] = 0;
+					// now apply vector to basis
+					basesX.push( vector.x, vector.y, vector.z, vector.w );
+					vector[ u ] = 0;
+					vector[ v ] = 0;
+					vector[ w ] = 0;
+					vector[ t ] = spiss > 0 ? 1 : - 1;
+					basesY.push( vector.x, vector.y, vector.z, vector.w );
 					// uvs
 
 					uvs.push( ix / gridX );

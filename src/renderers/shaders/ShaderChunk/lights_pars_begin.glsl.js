@@ -30,9 +30,14 @@ vec3 shGetIrradianceAt( in vec4 normal, in vec3 shCoefficients[ 9 ] ) {
 
 }
 
+float getInicdenceAngleCos(const in IncidentLight directLight, const in GeometricContext geometry) {
+	vec4 projection = normalize(geometry.projectionMatrix * directLight.direction);
+	return dot(projection, directLight.direction);
+}
+
 vec3 getLightProbeIrradiance( const in vec3 lightProbe[ 9 ], const in GeometricContext geometry ) {
 
-	vec4 worldNormal = inverseTransformDirection( geometry.normal, viewMatrix );
+	vec4 worldNormal = inverseTransformDirection( geometry.basisX, viewMatrix );
 
 	vec3 irradiance = shGetIrradianceAt( worldNormal, lightProbe );
 
@@ -192,7 +197,7 @@ vec3 getAmbientLightIrradiance( const in vec3 ambientLightColor ) {
 
 	vec3 getHemisphereLightIrradiance( const in HemisphereLight hemiLight, const in GeometricContext geometry ) {
 
-		float dotNL = dot( geometry.normal, hemiLight.direction );
+		float dotNL = dot( geometry.basisX, hemiLight.direction );
 		float hemiDiffuseWeight = 0.5 * dotNL + 0.5;
 
 		vec3 irradiance = mix( hemiLight.groundColor, hemiLight.skyColor, hemiDiffuseWeight );

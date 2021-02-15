@@ -29,11 +29,11 @@ void main() {
 	#include <uv2_vertex>
 	#include <color_vertex>
 
-	#include <beginnormal_vertex>
-	#include <morphnormal_vertex>
+	#include <beginbasis_vertex>
+	//#include <morphnormal_vertex>
 	#include <skinbase_vertex>
-	#include <skinnormal_vertex>
-	#include <defaultnormal_vertex>
+	//#include <skinnormal_vertex>
+	#include <defaultbasis_vertex>
 
 	#include <begin_vertex>
 	#include <morphtarget_vertex>
