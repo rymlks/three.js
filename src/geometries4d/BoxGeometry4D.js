@@ -146,7 +146,7 @@ class BoxBufferGeometry4D extends BufferGeometry4D {
 					vector[ u ] = 0;
 					vector[ v ] = 0;
 					vector[ w ] = 0;
-					vector[ 'w' ] = -1;
+					vector[ 'w' ] = 1;
 					basesY.push( vector.x, vector.y, vector.z, vector.w );
 
 					// uvs
