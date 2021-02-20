@@ -275,6 +275,19 @@ Object.assign( Euler4D.prototype, {
 
 	},
 
+	lerp: function ( e, alpha ) {
+
+		this._yz += ( e._yz - this._yz ) * alpha;
+		this._zx += ( e._zx - this._zx ) * alpha;
+		this._xy += ( e._xy - this._xy ) * alpha;
+		this._xw += ( e._xw - this._xw ) * alpha;
+		this._yw += ( e._yw - this._yw ) * alpha;
+		this._zw += ( e._zw - this._zw ) * alpha;
+
+		return this;
+
+	},
+
 	fromArray: function ( array ) {
 
 		this._yz = array[ 0 ];

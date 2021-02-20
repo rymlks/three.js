@@ -6,10 +6,9 @@
 
 import { Matrix4 } from '../math/Matrix4.js';
 import { Matrix5 } from '../math/Matrix5.js';
-import { Object3D } from '../core/Object3D.js';
 import { Object4D } from '../core/Object4D.js';
 import { Vector3 } from '../math/Vector3.js';
-import { Vector4 } from '../math/Vector4_.js';
+import { Vector4 } from '../math/Vector4.js';
 
 function Camera4D() {
 
