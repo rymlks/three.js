@@ -3,23 +3,23 @@
  */
 
 import { ImageLoader } from './ImageLoader.js';
-import { CubeTexture } from '../textures/CubeTexture.js';
+import { CubeTexture4D } from '../textures/CubeTexture4D.js';
 import { Loader } from './Loader.js';
 
 
-function CubeTextureLoader( manager ) {
+function CubeTextureLoader4D( manager ) {
 
 	Loader.call( this, manager );
 
 }
 
-CubeTextureLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
+CubeTextureLoader4D.prototype = Object.assign( Object.create( Loader.prototype ), {
 
-	constructor: CubeTextureLoader,
+	constructor: CubeTextureLoader4D,
 
 	load: function ( urls, onLoad, onProgress, onError ) {
 
-		var texture = new CubeTexture();
+		var texture = new CubeTexture4D();
 
 		var loader = new ImageLoader( this.manager );
 		loader.setCrossOrigin( this.crossOrigin );
@@ -60,4 +60,4 @@ CubeTextureLoader.prototype = Object.assign( Object.create( Loader.prototype ), 
 } );
 
 
-export { CubeTextureLoader };
+export { CubeTextureLoader4D };

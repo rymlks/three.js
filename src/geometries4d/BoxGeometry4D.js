@@ -28,7 +28,7 @@ class BoxGeometry4D extends Geometry4D {
 		};
 
 		this.fromBufferGeometry( new BoxBufferGeometry4D( width, height, depth, widthSegments, heightSegments, depthSegments ) );
-		this.mergeVertices();
+		//this.mergeVertices();
 
 	}
 
@@ -130,7 +130,7 @@ class BoxBufferGeometry4D extends BufferGeometry4D {
 					vector[ v ] = y * vdir;
 					vector[ w ] = depthHalf;
 					vector[ 'w' ] = 0;
-					console.log("vertex(" + vector.x +","+vector.y+","+vector.z+","+vector.w+")");
+					//console.log("vertex(" + vector.x +","+vector.y+","+vector.z+","+vector.w+")");
 
 					// now apply vector to vertex buffer
 

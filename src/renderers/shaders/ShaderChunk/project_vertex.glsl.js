@@ -22,6 +22,7 @@ if (modelW < -0.001 || modelW > 0.001) {
 }
 
 
+
 // dont mess with this.
 //mvPosition3D.z *= abs(mvPosition3D.w);
 mvPosition3D.w = 1.0;

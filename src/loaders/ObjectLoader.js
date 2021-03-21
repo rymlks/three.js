@@ -44,7 +44,7 @@ import { RectAreaLight } from '../lights/RectAreaLight.js';
 import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 import { Scene } from '../scenes/Scene.js';
-import { CubeTexture } from '../textures/CubeTexture.js';
+import { CubeTexture4D } from '../textures/CubeTexture4D.js';
 import { Texture } from '../textures/Texture.js';
 import { ImageLoader } from './ImageLoader.js';
 import { LoadingManager } from './LoadingManager.js';
@@ -636,7 +636,7 @@ ObjectLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 				if ( Array.isArray( images[ data.image ] ) ) {
 
-					texture = new CubeTexture( images[ data.image ] );
+					texture = new CubeTexture4D( images[ data.image ] );
 
 				} else {
 

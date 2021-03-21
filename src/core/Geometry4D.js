@@ -2,9 +2,10 @@ import { EventDispatcher } from './EventDispatcher.js';
 import { Face4 } from './Face4.js';
 import { Matrix3 } from '../math/Matrix3.js';
 import { Glome } from '../math/Glome.js';
-import { Box3 } from '../math/Box3.js';
+import { Box4 } from '../math/Box4.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Vector4 } from '../math/Vector4.js';
+import { Basis2 } from '../math/Basis2.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Vector2 } from '../math/Vector2.js';
 import { Color } from '../math/Color.js';
@@ -82,11 +83,18 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 		for ( var i = 0, il = this.faces.length; i < il; i ++ ) {
 
 			var face = this.faces[ i ];
-			face.normal.applyMatrix4( normalMatrix ).normalize();
+			face.basisX.applyMatrix4( normalMatrix ).normalize();
+			face.basisY.applyMatrix4( normalMatrix ).normalize();
 
-			for ( var j = 0, jl = face.vertexNormals.length; j < jl; j ++ ) {
+			for ( var j = 0, jl = face.vertexBasesX.length; j < jl; j ++ ) {
 
-				face.vertexNormals[ j ].applyMatrix4( normalMatrix ).normalize();
+				face.vertexBasesX[ j ].applyMatrix4( normalMatrix ).normalize();
+
+			}
+
+			for ( var j = 0, jl = face.vertexBasesY.length; j < jl; j ++ ) {
+
+				face.vertexBasesY[ j ].applyMatrix4( normalMatrix ).normalize();
 
 			}
 
@@ -192,13 +200,14 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 		if ( attributes.position === undefined ) {
 
-			console.error( 'THREE.Geometry.fromBufferGeometry(): Position attribute required for conversion.' );
+			console.error( 'THREE.Geometry4D.fromBufferGeometry(): Position attribute required for conversion.' );
 			return this;
 
 		}
 
 		var positions = attributes.position.array;
-		var normals = attributes.normal !== undefined ? attributes.normal.array : undefined;
+		var basesX = attributes.basisX !== undefined ? attributes.basisX.array : undefined;
+		var basesY = attributes.basisY !== undefined ? attributes.basisY.array : undefined;
 		var colors = attributes.color !== undefined ? attributes.color.array : undefined;
 		var uvs = attributes.uv !== undefined ? attributes.uv.array : undefined;
 		var uvs2 = attributes.uv2 !== undefined ? attributes.uv2.array : undefined;
@@ -208,6 +217,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 		for ( var i = 0; i < positions.length; i += 4 ) {
 
 			scope.vertices.push( new Vector4().fromArray( positions, i ) );
+
 
 			if ( colors !== undefined ) {
 
@@ -224,13 +234,13 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 				scope.colors[ b ].clone(),
 				scope.colors[ c ].clone() ];
 
-			var vertexNormals = ( normals === undefined ) ? [] : [
-				new Vector4().fromArray( normals, a * 4 ),
-				new Vector4().fromArray( normals, b * 4 ),
-				new Vector4().fromArray( normals, c * 4 )
+			var vertexBases = ( basesX === undefined || basesY === undefined ) ? [] : [
+				new Basis2(new Vector4().fromArray( basesX, a * 4 ), new Vector4().fromArray( basesY, a * 4 )),
+				new Basis2(new Vector4().fromArray( basesX, b * 4 ), new Vector4().fromArray( basesY, b * 4 )),
+				new Basis2(new Vector4().fromArray( basesX, c * 4 ), new Vector4().fromArray( basesY, c * 4 ))
 			];
-
-			var face = new Face4( a, b, c, vertexNormals, vertexColors, materialIndex );
+			
+			var face = new Face4( a, b, c, vertexBases, vertexColors, materialIndex );
 
 			scope.faces.push( face );
 
@@ -305,7 +315,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 		}
 
-		this.computeFaceNormals();
+		//this.computeFaceBases();
 
 		if ( geometry.boundingBox !== null ) {
 
@@ -359,10 +369,9 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 	},
 
-	computeFaceNormals: function () {
-		console.error("THREE.Geometry4D: .computeFaceNormals() is not done");
+	computeFaceBases: function () {
 
-		var cb = new Vector3(), ab = new Vector3();
+		var cb = new Vector4(), ab = new Vector4();
 
 		for ( var f = 0, fl = this.faces.length; f < fl; f ++ ) {
 
@@ -374,13 +383,10 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 			cb.subVectors( vC, vB );
 			ab.subVectors( vA, vB );
-			cb.cross( ab );
 
-			cb.normalize();
+			var basis = new Basis2().gramSchmidt(cb, ab);
 
-			var cb4 = new Vector4(cb.x, cb.y, cb.z, 1.0).normalize();
-
-			face.normal.copy( cb4 );
+			face.basis.copy( basis );
 
 		}
 
@@ -431,7 +437,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 		} else {
 
-			this.computeFaceNormals();
+			this.computeFaceBases();
 
 			for ( f = 0, fl = this.faces.length; f < fl; f ++ ) {
 
@@ -486,7 +492,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 		var f, fl, face;
 
-		this.computeFaceNormals();
+		this.computeFaceBases();
 
 		for ( f = 0, fl = this.faces.length; f < fl; f ++ ) {
 
@@ -599,7 +605,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 			// compute morph normals
 
-			tmpGeo.computeFaceNormals();
+			tmpGeo.computeFaceBases();
 			tmpGeo.computeVertexNormals();
 
 			// store morph normals
@@ -637,11 +643,10 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 	},
 
 	computeBoundingBox: function () {
-		console.error("THREE.Geometry4D: .computeBoundingBox() is not done");
 
 		if ( this.boundingBox === null ) {
 
-			this.boundingBox = new Box3();
+			this.boundingBox = new Box4();
 
 		}
 
@@ -805,7 +810,6 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 	 */
 
 	mergeVertices: function () {
-		console.error("THREE.Geometry4D: .mergeVertices() is not done");
 
 		var verticesMap = {}; // Hashmap for looking up vertices by position coordinates (and making sure they are unique)
 		var unique = [], changes = [];

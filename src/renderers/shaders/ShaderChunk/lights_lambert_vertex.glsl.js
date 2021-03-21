@@ -40,8 +40,7 @@ vec3 directLightColor_Diffuse;
 		float c2 = abs(dot(projection, geometry.basisY));
 
 		projection = c1 * geometry.basisX + c2 * geometry.basisY;
-
-		projection = normalize(geometry.basisX + geometry.basisY);
+		projection = normalize(projection);
 		
 		dotNL = dot( projection, directLight.direction );
 		

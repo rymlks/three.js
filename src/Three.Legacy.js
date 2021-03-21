@@ -50,7 +50,7 @@ import { Loader } from './loaders/Loader.js';
 import { LoaderUtils } from './loaders/LoaderUtils.js';
 import { FileLoader } from './loaders/FileLoader.js';
 import { AudioLoader } from './loaders/AudioLoader.js';
-import { CubeTextureLoader } from './loaders/CubeTextureLoader.js';
+import { CubeTextureLoader4D } from './loaders/CubeTextureLoader4D.js';
 import { DataTextureLoader } from './loaders/DataTextureLoader.js';
 import { ObjectLoader } from './loaders/ObjectLoader.js';
 import { TextureLoader } from './loaders/TextureLoader.js';
@@ -2072,7 +2072,7 @@ ImageUtils.loadTextureCube = function ( urls, mapping, onLoad, onError ) {
 
 	console.warn( 'THREE.ImageUtils.loadTextureCube has been deprecated. Use THREE.CubeTextureLoader() instead.' );
 
-	var loader = new CubeTextureLoader();
+	var loader = new CubeTextureLoader4D();
 	loader.setCrossOrigin( this.crossOrigin );
 
 	var texture = loader.load( urls, onLoad, undefined, onError );

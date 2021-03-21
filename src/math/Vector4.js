@@ -5,7 +5,7 @@
  * @author egraether / http://egraether.com/
  * @author WestLangley / http://github.com/WestLangley
  */
-import { Plane4D } from './Plane4D.js';
+import { Basis2 } from './Basis2.js'
 
 function Vector4( x, y, z, w ) {
 

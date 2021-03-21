@@ -1,19 +1,21 @@
 import { Color } from '../math/Color.js';
 import { Vector4 } from '../math/Vector4.js';
+import { Basis2 } from '../math/Basis2.js';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  */
 
-function Face4( a, b, c, normal, color, materialIndex ) {
+function Face4( a, b, c, basis, color, materialIndex ) {
 
 	this.a = a;
 	this.b = b;
 	this.c = c;
 
-	this.normal = ( normal && normal.isVector4 ) ? normal : new Vector4();
-	this.vertexNormals = Array.isArray( normal ) ? normal : [];
+	this.basis = ( basis && basis.isBasis2 ) ? basis : new Basis2();
+
+	this.vertexBases = Array.isArray( basis ) ? basis : [];
 
 	this.color = ( color && color.isColor ) ? color : new Color();
 	this.vertexColors = Array.isArray( color ) ? color : [];
@@ -36,17 +38,16 @@ Object.assign( Face4.prototype, {
 		this.b = source.b;
 		this.c = source.c;
 
-		this.normal.copy( source.normal );
+		this.basis.copy( source.basis );
 		this.color.copy( source.color );
 
 		this.materialIndex = source.materialIndex;
 
-		for ( var i = 0, il = source.vertexNormals.length; i < il; i ++ ) {
+		for ( var i = 0, il = source.vertexBases.length; i < il; i ++ ) {
 
-			this.vertexNormals[ i ] = source.vertexNormals[ i ].clone();
+			this.vertexBases[ i ] = source.vertexBases[ i ].clone();
 
 		}
-
 		for ( var i = 0, il = source.vertexColors.length; i < il; i ++ ) {
 
 			this.vertexColors[ i ] = source.vertexColors[ i ].clone();

@@ -137,9 +137,9 @@ float dot4(vec4 a, vec4 b) {
 ///////////////////////////////////////////////////////////////////////////////////
 // Old functions
 
-vec3 transformDirection( in vec3 dir, in mat4 matrix ) {
+vec4 transformDirection( in vec4 dir, in mat5 matrix ) {
 
-	return normalize( ( matrix * vec4( dir, 0.0 ) ).xyz );
+	return normalize( xyzw( multiply( matrix, vec5( dir.x, dir.y, dir.z, dir.w, 0.0 ) ) ) );
 
 }
 

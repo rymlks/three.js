@@ -5,7 +5,7 @@
 import { Texture } from './Texture.js';
 import { CubeReflectionMapping, RGBFormat } from '../constants.js';
 
-function CubeTexture( images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding ) {
+function CubeTexture4D( images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding ) {
 
 	images = images !== undefined ? images : [];
 	mapping = mapping !== undefined ? mapping : CubeReflectionMapping;
@@ -17,12 +17,12 @@ function CubeTexture( images, mapping, wrapS, wrapT, magFilter, minFilter, forma
 
 }
 
-CubeTexture.prototype = Object.create( Texture.prototype );
-CubeTexture.prototype.constructor = CubeTexture;
+CubeTexture4D.prototype = Object.create( Texture.prototype );
+CubeTexture4D.prototype.constructor = CubeTexture4D;
 
-CubeTexture.prototype.isCubeTexture = true;
+CubeTexture4D.prototype.isCubeTexture = true;
 
-Object.defineProperty( CubeTexture.prototype, 'images', {
+Object.defineProperty( CubeTexture4D.prototype, 'images', {
 
 	get: function () {
 
@@ -39,4 +39,4 @@ Object.defineProperty( CubeTexture.prototype, 'images', {
 } );
 
 
-export { CubeTexture };
+export { CubeTexture4D };

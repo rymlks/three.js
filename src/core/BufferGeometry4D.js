@@ -4,7 +4,7 @@ import { Box4 } from '../math/Box4.js';
 import { EventDispatcher } from './EventDispatcher.js';
 import { BufferAttribute, Float32BufferAttribute, Uint16BufferAttribute, Uint32BufferAttribute } from './BufferAttribute.js';
 import { Glome } from '../math/Glome.js';
-import { DirectGeometry } from './DirectGeometry.js';
+import { DirectGeometry4D  } from './DirectGeometry4D.js';
 import { Object4D } from './Object4D.js';
 import { Matrix5 } from '../math/Matrix5.js';
 import { Matrix4 } from '../math/Matrix4.js';
@@ -453,7 +453,7 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 
 	fromGeometry: function ( geometry ) {
 
-		geometry.__directGeometry = new DirectGeometry().fromGeometry( geometry );
+		geometry.__directGeometry = new DirectGeometry4D().fromGeometry( geometry );
 
 		return this.fromDirectGeometry( geometry.__directGeometry );
 
@@ -464,10 +464,17 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 		var positions = new Float32Array( geometry.vertices.length * 4 );
 		this.setAttribute( 'position', new BufferAttribute( positions, 4 ).copyVector4sArray( geometry.vertices ) );
 
-		if ( geometry.normals.length > 0 ) {
+		if ( geometry.basesX.length > 0 ) {
 
-			var normals = new Float32Array( geometry.normals.length * 4 );
-			this.setAttribute( 'normal', new BufferAttribute( normals, 4 ).copyVector4sArray( geometry.normals ) );
+			var basesX = new Float32Array( geometry.basesX.length * 4 );
+			this.setAttribute( 'basisX', new BufferAttribute( basesX, 4 ).copyVector4sArray( geometry.basesX ) );
+
+		}
+
+		if ( geometry.basesY.length > 0 ) {
+
+			var basesY = new Float32Array( geometry.basesY.length * 4 );
+			this.setAttribute( 'basisY', new BufferAttribute( basesY, 4 ).copyVector4sArray( geometry.basesY ) );
 
 		}
 
@@ -718,6 +725,8 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 	},
 
 	computeVertexNormals: function () {
+
+		console.error("THREE.BufferGeometry4D.computeVertexNormals() is not done");
 
 		var index = this.index;
 		var attributes = this.attributes;

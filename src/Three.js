@@ -31,7 +31,7 @@ export { DataTexture } from './textures/DataTexture.js';
 export { DataTexture2DArray } from './textures/DataTexture2DArray.js';
 export { DataTexture3D } from './textures/DataTexture3D.js';
 export { CompressedTexture } from './textures/CompressedTexture.js';
-export { CubeTexture } from './textures/CubeTexture.js';
+export { CubeTexture4D } from './textures/CubeTexture4D.js';
 export { CanvasTexture } from './textures/CanvasTexture.js';
 export { DepthTexture } from './textures/DepthTexture.js';
 export { Texture } from './textures/Texture.js';
@@ -40,7 +40,7 @@ export * from './materials/Materials.js';
 export { AnimationLoader } from './loaders/AnimationLoader.js';
 export { CompressedTextureLoader } from './loaders/CompressedTextureLoader.js';
 export { DataTextureLoader } from './loaders/DataTextureLoader.js';
-export { CubeTextureLoader } from './loaders/CubeTextureLoader.js';
+export { CubeTextureLoader4D } from './loaders/CubeTextureLoader4D.js';
 export { TextureLoader } from './loaders/TextureLoader.js';
 export { ObjectLoader } from './loaders/ObjectLoader.js';
 export { MaterialLoader } from './loaders/MaterialLoader.js';
@@ -180,7 +180,8 @@ export * from './geometries4d/Geometries4D.js';
 export { Camera4D } from './cameras4d/Camera4D.js';
 export { PerspectiveCamera4D } from './cameras4d/PerspectiveCamera4D.js';
 export { PhysicsMesh4D } from './physics/PhysicsMesh4D.js';
-export { TesseractBufferGeometry4D } from './geometries4d/TesseractGeometry4D.js';
+export { Basis2 } from './math/Basis2.js';
+export { Ray4D } from './math/Ray4D.js';
 
 if ( typeof __THREE_DEVTOOLS__ !== 'undefined' ) {
 

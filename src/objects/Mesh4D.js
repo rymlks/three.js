@@ -9,7 +9,7 @@ import { Triangle } from '../math/Triangle.js';
 import { Face3 } from '../core/Face3.js';
 import { DoubleSide, BackSide } from '../constants.js';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
+import { BufferGeometry4D } from '../core/BufferGeometry4D.js';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -47,7 +47,7 @@ function Mesh4D( geometry, material ) {
 
 	this.type = 'Mesh4D';
 
-	this.geometry = geometry !== undefined ? geometry : new BufferGeometry();
+	this.geometry = geometry !== undefined ? geometry : new BufferGeometry4D();
 	this.material = material !== undefined ? material : new MeshBasicMaterial();
 
 	this.updateMorphTargets();
