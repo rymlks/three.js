@@ -30,7 +30,7 @@ export default /* glsl */`
 
 	#else
 
-		vec3 reflectVec = vReflect;
+		vec4 reflectVec = vReflect;
 
 	#endif
 

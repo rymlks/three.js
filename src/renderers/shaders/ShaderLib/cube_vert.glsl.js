@@ -1,5 +1,5 @@
 export default /* glsl */`
-varying vec3 vWorldDirection;
+varying vec4 vWorldDirection;
 
 #include <common>
 

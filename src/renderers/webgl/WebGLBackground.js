@@ -2,12 +2,12 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-import { BackSide, FrontSide, CubeUVReflectionMapping } from '../../constants.js';
-import { BoxBufferGeometry } from '../../geometries/BoxGeometry.js';
+import { BackSide, FrontSide, DoubleSide, CubeUVReflectionMapping } from '../../constants.js';
+import { BoxBufferGeometry4D } from '../../geometries4d/BoxGeometry4D.js';
 import { PlaneBufferGeometry } from '../../geometries/PlaneGeometry.js';
 import { ShaderMaterial } from '../../materials/ShaderMaterial.js';
 import { Color } from '../../math/Color.js';
-import { Mesh } from '../../objects/Mesh.js';
+import { Mesh4D } from '../../objects/Mesh4D.js';
 import { ShaderLib } from '../shaders/ShaderLib.js';
 import { cloneUniforms } from '../shaders/UniformsUtils.js';
 
@@ -60,14 +60,14 @@ function WebGLBackground( renderer, state, objects, premultipliedAlpha ) {
 
 			if ( boxMesh === undefined ) {
 
-				boxMesh = new Mesh(
-					new BoxBufferGeometry( 1, 1, 1 ),
+				boxMesh = new Mesh4D(
+					new BoxBufferGeometry4D( 1, 1, 1 ),
 					new ShaderMaterial( {
 						type: 'BackgroundCubeMaterial',
 						uniforms: cloneUniforms( ShaderLib.cube.uniforms ),
 						vertexShader: ShaderLib.cube.vertexShader,
 						fragmentShader: ShaderLib.cube.fragmentShader,
-						side: BackSide,
+						side: DoubleSide,
 						depthTest: false,
 						depthWrite: false,
 						fog: false

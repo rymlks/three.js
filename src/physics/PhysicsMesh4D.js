@@ -1,11 +1,15 @@
 import {Mesh4D} from "../objects/Mesh4D.js"
 import {Vector4} from "../math/Vector4.js"
+import {Ray4D} from "../math/Ray4D.js"
 
 var G = new Vector4(0, -9.81, 0, 0);
 
 var _vec = new Vector4();
 
 function PhysicsMesh4D( geometry, material ) {
+    if ( geometry.isGeometry !== true) {
+        throw "PhysicsMesh4D: geometry must be Geometry4D (not BufferGeometry4D)";
+    }
 
     Mesh4D.call( this, geometry, material );
 
@@ -13,7 +17,7 @@ function PhysicsMesh4D( geometry, material ) {
     this.velocity = new Vector4();
 
     this.isAffectedByGravity = true;
-    this.weight = 1;
+    this.mass = 1;
 }
 
 PhysicsMesh4D.prototype = Object.assign( Object.create( Mesh4D.prototype ), {
@@ -23,7 +27,6 @@ PhysicsMesh4D.prototype = Object.assign( Object.create( Mesh4D.prototype ), {
     preUpdate() {
         this.geometry.computeBoundingBox();
         this.geometry.boundingBox.applyMatrix5(this.matrixWorld);
-        
         //this.geometry.computeBoundingGlome();
 
         for (var child of this.children) {
@@ -41,43 +44,61 @@ PhysicsMesh4D.prototype = Object.assign( Object.create( Mesh4D.prototype ), {
         }
         var movement = _vec.copy(this.velocity).multiplyScalar(delta);
 
-        var colliding = false;
+        var colliding = null;
         for (var child of scene.children) {
             if (child.isPhysicsObject === true) {
-                colliding = this.isCollidingWith(child);
-                if (colliding === true) break;
+                colliding = this.getCollision(child);
+                if (colliding !== null) {
+                    break;
+                }
             }
         }
-        if (colliding === false) {
+        if (colliding === null) {
             this.position.add(movement);
+        } else {
+            var myFace = this.getFaceCollidingWith(colliding);
+            //this.position.add(movement.multiplyScalar(-1));
         }
         for (var child of this.children) {
             if (child.isPhysicsObject === true) {
-                child.update(delta);
+                child.update(delta, scene);
             }
         }
     },
 
-    isCollidingWith: function(object) {
-        if (object === this) return false;
+    getCollision: function(object) {
+        if (object === this) return null;
 
-        var colliding = this.geometry.boundingBox.intersectsBox(object.geometry.boundingBox);
+        var colliding = this.geometry.boundingBox.intersectsBox(object.geometry.boundingBox) ? object : null;
 
-        if (colliding === true) {
+        if (colliding !== null) {
             //console.log(this.name + " colliding with " + object.name);
-            return true;
+            return colliding;
         }
         for (var child of object.children) {
             if (child.isPhysicsObject === true) {
-                colliding = this.isCollidingWith(child);
+                colliding = this.getCollision(child);
             }
-            if (colliding === true)  {
+            if (colliding !== null)  {
                 //console.log(this.name + " colliding with " + object.name);
-                return true;
+                return colliding;
             }
         }
 
-        return false;
+        return null;
+    },
+
+    getFaceCollidingWith: function(object) {
+
+        var direction = new Vector4().subVectors(object.position, this.position);
+        var ray = new Ray4D(this.position, direction);
+
+        for (var face of this.geometry.faces) {
+            //if (ray.intersectTriangle(face, this.geometry, false)) {
+
+            //}
+        }
+        return null;
     }
 } );
 
