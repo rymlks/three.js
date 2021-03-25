@@ -1,6 +1,8 @@
 
 export { BoxGeometry4D, BoxBufferGeometry4D } from './BoxGeometry4D.js';
 export { TesseractGeometry4D, TesseractBufferGeometry4D } from './TesseractGeometry4D.js';
+export { TextGeometry4D, TextBufferGeometry4D } from './TextGeometry4D.js';
+export { ExtrudeGeometry4D, ExtrudeBufferGeometry4D } from './ExtrudeGeometry4D.js';
 
 /*
 export { WireframeGeometry } from './WireframeGeometry.js';
