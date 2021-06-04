@@ -11,6 +11,7 @@ import { Vector2 } from '../math/Vector2.js';
 import { Color } from '../math/Color.js';
 import { Object4D } from './Object4D.js';
 import { MathUtils } from '../math/MathUtils.js';
+import { Crust4 } from './Crust4.js';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -38,6 +39,7 @@ function Geometry4D() {
 	this.vertices = [];
 	this.colors = [];
 	this.faces = [];
+	this.crusts = [];
 	this.faceVertexUvs = [[]];
 
 	this.morphTargets = [];
@@ -218,7 +220,6 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 			scope.vertices.push( new Vector4().fromArray( positions, i ) );
 
-
 			if ( colors !== undefined ) {
 
 				scope.colors.push( new Color().fromArray( colors, i ) );
@@ -305,7 +306,7 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 			} else {
 
-				for ( var i = 0; i < positions.length / 3; i += 3 ) {
+				for ( var i = 0; i < positions.length / 4; i += 3 ) {
 
 					addFace( i, i + 1, i + 2 );
 
@@ -315,7 +316,8 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 		}
 
-		//this.computeFaceBases();
+		this.computeCrusts();
+		this.computeFaceBases();
 
 		if ( geometry.boundingBox !== null ) {
 
@@ -369,45 +371,79 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 	},
 
+	computeCrusts: function() {
+
+		var degenerateCrusts = [];
+		this.crusts = [];
+		var facePool = [...this.faces];
+
+		while (facePool.length > 0) {
+			var crust = new Crust4(this.vertices, facePool.pop());
+
+			while (crust.isDegenerate()) {
+				var found = false;
+				for (var face of facePool) {
+					if (crust.isConnected(face)) {
+						crust.addFace(face);
+						facePool.splice(facePool.findIndex(a => a === face) , 1)
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					degenerateCrusts.push(crust);
+					break;
+				}
+			}
+			this.crusts.push(crust);
+		}
+		for (crust of degenerateCrusts) {
+			facePool = [...this.faces];
+			while (crust.isDegenerate()) {
+				var found = false;
+				for (var face of facePool) {
+					if (crust.isConnected(face)) {
+						crust.addFace(face);
+						facePool.splice(facePool.findIndex(a => a === face) , 1)
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					throw `THREE.Geometry4D - computeCrusts: Every contiguous face on crust: ${crust} is coplanar. ` + 
+						  `Please modify your model to consist of three-dimensional contiguous pieces.`;
+				}
+			}
+			this.crusts.push(crust);
+		}
+	},
+
 	computeFaceBases: function () {
 
-		var cb = new Vector4(), ab = new Vector4();
-
-		for ( var f = 0, fl = this.faces.length; f < fl; f ++ ) {
-
-			var face = this.faces[ f ];
-
-			var vA = this.vertices[ face.a ];
-			var vB = this.vertices[ face.b ];
-			var vC = this.vertices[ face.c ];
-
-			cb.subVectors( vC, vB );
-			ab.subVectors( vA, vB );
-
-			var basis = new Basis2().gramSchmidt(cb, ab);
-
-			face.basis.copy( basis );
-
+		for (var crust of this.crusts) {
+			crust.computeNormals();
 		}
 
 	},
 
 	computeVertexNormals: function ( areaWeighted ) {
-		console.error("THREE.Geometry4D: .computeVertexNormals() is not done");
 
 		if ( areaWeighted === undefined ) areaWeighted = true;
 
-		var v, vl, f, fl, face, vertices;
+		var v, vl, f, fl, face, verticesX, verticesY;
 
-		vertices = new Array( this.vertices.length );
+		verticesX = new Array( this.vertices.length );
+		verticesY = new Array( this.vertices.length );
 
 		for ( v = 0, vl = this.vertices.length; v < vl; v ++ ) {
 
-			vertices[ v ] = new Vector4();
+			verticesX[ v ] = new Vector4();
+			verticesY[ v ] = new Vector4();
 
 		}
 
 		if ( areaWeighted ) {
+			console.error("Area-weighted vertexNormals on faces is not yet supported");
 
 			// vertex normals weighted by triangle areas
 			// http://www.iquilezles.org/www/articles/normals/normals.htm
@@ -443,24 +479,22 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 
 				face = this.faces[ f ];
 
-				vertices[ face.a ].add( face.normal );
-				vertices[ face.b ].add( face.normal );
-				vertices[ face.c ].add( face.normal );
+				verticesX[ face.a ].add( face.basis.x );
+				verticesX[ face.b ].add( face.basis.x );
+				verticesX[ face.c ].add( face.basis.x );
+
+				verticesY[ face.a ].add( face.basis.y );
+				verticesY[ face.b ].add( face.basis.y );
+				verticesY[ face.c ].add( face.basis.y );
 
 			}
-
-		}
-
-		for ( v = 0, vl = this.vertices.length; v < vl; v ++ ) {
-
-			vertices[ v ].normalize();
 
 		}
 
 		for ( f = 0, fl = this.faces.length; f < fl; f ++ ) {
 
 			face = this.faces[ f ];
-
+			console.error("per-vertex vertexNormals on faces is not yet supported");
 			var vertexNormals = face.vertexNormals;
 
 			if ( vertexNormals.length === 3 ) {

@@ -182,6 +182,9 @@ export { PerspectiveCamera4D } from './cameras4d/PerspectiveCamera4D.js';
 export { PhysicsMesh4D } from './physics/PhysicsMesh4D.js';
 export { Basis2 } from './math/Basis2.js';
 export { Ray4D } from './math/Ray4D.js';
+export { OBJLoader4D } from './loaders/OBJLoader4D.js';
+export { MTLLoader4D } from './loaders/MTLLoader4D.js';
+export { Group4D } from './objects/Group4D.js';
 
 if ( typeof __THREE_DEVTOOLS__ !== 'undefined' ) {
 

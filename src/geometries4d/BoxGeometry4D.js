@@ -28,7 +28,7 @@ class BoxGeometry4D extends Geometry4D {
 		};
 
 		this.fromBufferGeometry( new BoxBufferGeometry4D( width, height, depth, widthSegments, heightSegments, depthSegments ) );
-		//this.mergeVertices();
+		this.mergeVertices();
 
 	}
 

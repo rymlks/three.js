@@ -723,7 +723,7 @@ BufferGeometry4D.prototype = Object.assign( Object.create( EventDispatcher.proto
 		// backwards compatibility
 
 	},
-
+	
 	computeVertexNormals: function () {
 
 		console.error("THREE.BufferGeometry4D.computeVertexNormals() is not done");
