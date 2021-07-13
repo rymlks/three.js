@@ -208,7 +208,13 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 		}
 
 		var positions = attributes.position.array;
-		var basesX = attributes.basisX !== undefined ? attributes.basisX.array : undefined;
+		var basesX = undefined;
+		if (attributes.normal !== undefined) {
+			basesX = attributes.normal.array;
+		}
+		else if (attributes.basisX !== undefined) {
+			basesX = attributes.basisX.array;
+		}
 		var basesY = attributes.basisY !== undefined ? attributes.basisY.array : undefined;
 		var colors = attributes.color !== undefined ? attributes.color.array : undefined;
 		var uvs = attributes.uv !== undefined ? attributes.uv.array : undefined;
@@ -235,11 +241,20 @@ Geometry4D.prototype = Object.assign( Object.create( EventDispatcher.prototype )
 				scope.colors[ b ].clone(),
 				scope.colors[ c ].clone() ];
 
-			var vertexBases = ( basesX === undefined || basesY === undefined ) ? [] : [
-				new Basis2(new Vector4().fromArray( basesX, a * 4 ), new Vector4().fromArray( basesY, a * 4 )),
-				new Basis2(new Vector4().fromArray( basesX, b * 4 ), new Vector4().fromArray( basesY, b * 4 )),
-				new Basis2(new Vector4().fromArray( basesX, c * 4 ), new Vector4().fromArray( basesY, c * 4 ))
-			];
+			var vertexBases = [];
+			if (basesX !== undefined && basesY !== undefined) {
+				vertexBases = [
+					new Basis2(new Vector4().fromArray( basesX, a * 4 ), new Vector4().fromArray( basesY, a * 4 )),
+					new Basis2(new Vector4().fromArray( basesX, b * 4 ), new Vector4().fromArray( basesY, b * 4 )),
+					new Basis2(new Vector4().fromArray( basesX, c * 4 ), new Vector4().fromArray( basesY, c * 4 ))
+				];
+			} else if (basesX !== undefined) {
+				vertexBases = [
+					new Basis2(new Vector4().fromArray( basesX, a * 4 ), new Vector4(0, 0, 0, 1)),
+					new Basis2(new Vector4().fromArray( basesX, b * 4 ), new Vector4(0, 0, 0, 1)),
+					new Basis2(new Vector4().fromArray( basesX, c * 4 ), new Vector4(0, 0, 0, 1))
+				];
+			}
 			
 			var face = new Face4( a, b, c, vertexBases, vertexColors, materialIndex );
 

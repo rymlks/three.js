@@ -67,6 +67,10 @@ Object.assign( Crust4.prototype, {
         // Find normals for face1, given face2
         for (var face1 of this.faces) {
 
+            if (face1.basis !== undefined && face1.basis.x.lengthSq() > 0 && face1.basis.y.lengthSq() > 0) {
+                return;
+            }
+
             var basisX = this.vertices[face1.a].clone().sub(this.vertices[face1.b]);
             var basisY = this.vertices[face1.a].clone().sub(this.vertices[face1.c]);
 
